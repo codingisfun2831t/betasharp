@@ -279,18 +279,19 @@ public class TextRenderer
         }
     }
 
-    public void DrawStringWithShadow(ReadOnlySpan<char> text, int x, int y, Guis.Color color)
+    public void DrawStringWithShadow(ReadOnlySpan<char> text, int x, int y, Guis.Color color, HorizontalAlignment alignment = HorizontalAlignment.Left)
     {
-        RenderString(text, x + 1, y + 1, color, true);
-        DrawString(text, x, y, color);
+        RenderString(text, x + 1, y + 1, color, true, alignment);
+        DrawString(text, x, y, color, alignment);
     }
 
-    public void DrawString(ReadOnlySpan<char> text, int x, int y, Guis.Color color)
+    public void DrawString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, HorizontalAlignment alignment = HorizontalAlignment.Left)
     {
-        RenderString(text, x, y, color, false);
+        RenderString(text, x, y, color, false, alignment);
+
     }
 
-    public void RenderString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, bool darken)
+    public void RenderString(ReadOnlySpan<char> text, int x, int y, Guis.Color color, bool darken, HorizontalAlignment alignment)
     {
         if (text.IsEmpty) return;
 
@@ -302,6 +303,17 @@ public class TextRenderer
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA(color);
+
+        int width = GetStringWidth(text);
+
+        if (alignment == HorizontalAlignment.Center)
+        {
+            x -= width / 2;
+        } else if (alignment == HorizontalAlignment.Right)
+        {
+            x -= width;
+
+        }
 
         float currentX = x;
         float currentY = y;
@@ -386,7 +398,7 @@ public class TextRenderer
         return text.Length;
     }
 
-    private void ProcessWrappedText(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, bool draw, ref int outHeight)
+    private void ProcessWrappedText(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, bool draw, ref int outHeight, HorizontalAlignment alignment)
     {
         if (text.IsEmpty) return;
 
@@ -420,7 +432,7 @@ public class TextRenderer
                 if (subline.Length > 0 || fitLength > 0)
                 {
                     if (draw && subline.Length > 0)
-                        DrawString(subline, x, currentY, color);
+                        DrawString(subline, x, currentY, color, alignment);
                     currentY += lineHeight;
                     totalHeight += lineHeight;
                 }
@@ -435,16 +447,16 @@ public class TextRenderer
         outHeight = totalHeight;
     }
 
-    public void DrawStringWrapped(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color)
+    public void DrawStringWrapped(ReadOnlySpan<char> text, int x, int y, int maxWidth, Guis.Color color, HorizontalAlignment alignment = HorizontalAlignment.Left)
     {
         int dummyHeight = 0;
-        ProcessWrappedText(text, x, y, maxWidth, color, true, ref dummyHeight);
+        ProcessWrappedText(text, x, y, maxWidth, color, true, ref dummyHeight, alignment);
     }
 
     public int GetStringHeight(ReadOnlySpan<char> text, int maxWidth)
     {
         int height = 0;
-        ProcessWrappedText(text, 0, 0, maxWidth, Guis.Color.Black, false, ref height);
+        ProcessWrappedText(text, 0, 0, maxWidth, Guis.Color.Black, false, ref height, HorizontalAlignment.Left);
         return height;
     }
 }

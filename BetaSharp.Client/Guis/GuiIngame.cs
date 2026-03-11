@@ -29,11 +29,13 @@ public class GuiIngame : Gui
     private bool _isRecordMessageRainbow = false;
     public float _damageGuiPartialTime;
     float PrevVignetteBrightness = 1.0F;
+    private readonly DebugOverlay _debug;
 
     public GuiIngame(BetaSharp gameInstance)
     {
         _game = gameInstance;
         _gcMonitor = new GCMonitor();
+        _debug = new(gameInstance, _gcMonitor);
     }
 
     private static int HSBtoRGB(float hue, float saturation, float brightness)
@@ -262,26 +264,7 @@ public class GuiIngame : Gui
             if (BetaSharp.hasPaidCheckTime > 0L)
                 GLManager.GL.Translate(0.0F, 32.0F, 0.0F);
 
-            font.DrawStringWithShadow("Minecraft Beta 1.7.3 (" + _game.debug + ")", 2, 2, Color.White);
-            font.DrawStringWithShadow(_game.getEntityDebugInfo(), 2, 22, Color.White);
-            font.DrawStringWithShadow(_game.getParticleAndEntityCountDebugInfo(), 2, 32, Color.White);
-            font.DrawStringWithShadow(_game.getWorldDebugInfo(), 2, 42, Color.White);
-            long maxMem = _gcMonitor.MaxMemoryBytes;
-            long usedMem = _gcMonitor.UsedMemoryBytes;
-            long heapMem = _gcMonitor.UsedHeapBytes;
-            debugStr = "Used memory: " + usedMem * 100L / maxMem + "% (" + usedMem / 1024L / 1024L + "MB) of " + maxMem / 1024L / 1024L + "MB";
-            DrawString(font, debugStr, scaledWidth - font.GetStringWidth(debugStr) - 2, 2, Color.GrayE0);
-            debugStr = "GC heap: " + heapMem * 100L / maxMem + "% (" + heapMem / 1024L / 1024L + "MB)";
-            DrawString(font, debugStr, scaledWidth - font.GetStringWidth(debugStr) - 2, 12, Color.GrayE0);
-            DrawString(font, "x: " + _game.player.x, 2, 64, Color.GrayE0);
-            DrawString(font, "y: " + _game.player.y, 2, 72, Color.GrayE0);
-            DrawString(font, "z: " + _game.player.z, 2, 80, Color.GrayE0);
-            DrawString(font, "f: " + (MathHelper.Floor((double)(_game.player.yaw * 4.0F / 360.0F) + 0.5D) & 3), 2, 88, Color.GrayE0);
-
-            if (_game.internalServer != null)
-            {
-                DrawString(font, $"Server TPS: {_game.internalServer.Tps:F1}", 2, 104, Color.GrayE0);
-            }
+            _debug.DrawDebug();
 
             GLManager.GL.PopMatrix();
         }
