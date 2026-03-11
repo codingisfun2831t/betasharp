@@ -1,7 +1,28 @@
 ﻿using Avalonia;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Runtime.InteropServices;
 using BetaSharp.Launcher;
 using Serilog;
+
+if (args[0] == "debug")
+{
+    string directory = Path.Combine(AppContext.BaseDirectory, "Client");
+
+    var info = new ProcessStartInfo
+    {
+        CreateNoWindow = true,
+        FileName = Path.Combine(directory, "BetaSharp.Client"),
+        WorkingDirectory = directory
+    };
+
+    using var process = Process.Start(info);
+
+    ArgumentNullException.ThrowIfNull(process);
+
+    await process.WaitForExitAsync();  return;
+}
 
 try
 {
