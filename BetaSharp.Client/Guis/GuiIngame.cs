@@ -10,6 +10,7 @@ using BetaSharp.Util;
 using BetaSharp.Util.Maths;
 using SixLabors.ImageSharp.PixelFormats;
 using BetaSharp.Client.Rendering.Core.OpenGL;
+using BetaSharp.Client.Guis.Debug;
 
 namespace BetaSharp.Client.Guis;
 
@@ -35,7 +36,9 @@ public class GuiIngame : Gui
     {
         _game = gameInstance;
         _gcMonitor = new GCMonitor();
-        _debug = new(gameInstance, _gcMonitor);
+        _debug = new(gameInstance);
+
+        _debug.Components.Add(new DebugVersion());
     }
 
     private static int HSBtoRGB(float hue, float saturation, float brightness)
