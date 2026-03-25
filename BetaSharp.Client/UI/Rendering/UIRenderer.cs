@@ -27,7 +27,10 @@ public class UIRenderer
         _translateY = 0;
     }
 
-    public static void End() => GLManager.GL.PopMatrix();
+    public void End()
+    {
+        GLManager.GL.PopMatrix();
+    }
 
     public void PushTranslate(float x, float y)
     {
@@ -43,24 +46,24 @@ public class UIRenderer
 
     public void EnableClipping(int x, int y, int width, int height)
     {
-        var game = BetaSharp.Instance;
-        ScaledResolution res = new ScaledResolution(game.options, game.displayWidth, game.displayHeight);
-        
+        BetaSharp game = BetaSharp.Instance;
+        ScaledResolution res = new(game.options, game.displayWidth, game.displayHeight);
+
         int scale = res.ScaleFactor;
         int scaledWindowHeight = game.displayHeight;
-        
+
         int physicalX = (int)((x + _translateX) * scale);
-        int physicalWidth = (int)(width * scale);
-        int physicalHeight = (int)(height * scale);
+        int physicalWidth = (width * scale);
+        int physicalHeight = (height * scale);
         int physicalY = scaledWindowHeight - (int)((y + _translateY) * scale) - physicalHeight;
 
-        GLManager.GL.Enable((global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
+        GLManager.GL.Enable((Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
         GLManager.GL.Scissor(physicalX, physicalY, (uint)physicalWidth, (uint)physicalHeight);
     }
-    
+
     public void DisableClipping()
     {
-        GLManager.GL.Disable((global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
+        GLManager.GL.Disable((Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
     }
 
     public void DrawRect(float x, float y, float width, float height, Color color)
@@ -77,9 +80,22 @@ public class UIRenderer
         _textRenderer.DrawStringWithShadow(text, (int)(x + _translateX), (int)(y + _translateY), color);
     }
 
-    public void DrawCenteredText(string text, float x, float y, Color color)
+    public void DrawCenteredText(string text, float x, float y, Color color, float rotation = 0, float scale = 1.0f)
     {
-        Gui.DrawCenteredString(_textRenderer, text, (int)(x + _translateX), (int)(y + _translateY), color);
+        if (rotation == 0 && scale == 1.0f)
+        {
+            Gui.DrawCenteredString(_textRenderer, text, (int)(x + _translateX), (int)(y + _translateY), color);
+            return;
+        }
+
+        GLManager.GL.PushMatrix();
+        GLManager.GL.Translate(x + _translateX, y + _translateY, 0);
+        if (rotation != 0) GLManager.GL.Rotate(rotation, 0, 0, 1);
+        if (scale != 1.0f) GLManager.GL.Scale(scale, scale, 1);
+
+        Gui.DrawCenteredString(_textRenderer, text, 0, 0, color);
+
+        GLManager.GL.PopMatrix();
     }
 
     public void DrawTexture(TextureHandle texture, float x, float y, float width, float height)
@@ -102,7 +118,6 @@ public class UIRenderer
         _textureManager.BindTexture(texture);
         float f = 0.00390625F;
         Tessellator tess = Tessellator.instance;
-
         float finalX = x + _translateX;
         float finalY = y + _translateY;
 
@@ -121,11 +136,11 @@ public class UIRenderer
 
         float finalX = x + _translateX;
         float finalY = y + _translateY;
-        
+
         GLManager.GL.Color4(1.0f, 1.0f, 1.0f, 1.0f);
 
         tess.startDrawingQuads();
-        tess.setColorOpaque_I(0x202020);
+        tess.setColorOpaque_I(0x404040);
         tess.addVertexWithUV(finalX, finalY + height, 0.0, finalX / textureScale, (finalY + height + scrollOffsetY) / textureScale);
         tess.addVertexWithUV(finalX + width, finalY + height, 0.0, (finalX + width) / textureScale, (finalY + height + scrollOffsetY) / textureScale);
         tess.addVertexWithUV(finalX + width, finalY, 0.0, (finalX + width) / textureScale, (finalY + scrollOffsetY) / textureScale);
@@ -137,15 +152,6 @@ public class UIRenderer
     {
         float finalX = x + _translateX;
         float finalY = y + _translateY;
-
-        var gl = GLManager.GL;
-        var glEnum = typeof(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum);
-
-        gl.Disable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Texture2D);
-        gl.Enable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Blend);
-        gl.Disable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.AlphaTest);
-        gl.BlendFunc(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.SrcAlpha, global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.OneMinusSrcAlpha);
-        gl.ShadeModel(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Smooth);
 
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
@@ -162,12 +168,7 @@ public class UIRenderer
         // Top-Right
         tess.setColorRGBA(topColor);
         tess.addVertex(finalX + width, finalY, 0.0);
-        
-        tess.draw();
 
-        gl.ShadeModel(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Flat);
-        gl.Disable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Blend);
-        gl.Enable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.AlphaTest);
-        gl.Enable(global::BetaSharp.Client.Rendering.Core.OpenGL.GLEnum.Texture2D);
+        tess.draw();
     }
 }

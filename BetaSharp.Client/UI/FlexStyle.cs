@@ -1,3 +1,4 @@
+using BetaSharp.Client.Guis;
 using BetaSharp.Client.UI.Layout.Flexbox;
 
 namespace BetaSharp.Client.UI;
@@ -9,6 +10,9 @@ public class FlexStyle
     // Size. Null means auto.
     public float? Width { get; set; }
     public float? Height { get; set; }
+
+    // Background. Null means transparent.
+    public Color? BackgroundColor { get; set; }
 
     // Flexbox
     public FlexDirection FlexDirection { get; set; } = FlexDirection.Column;

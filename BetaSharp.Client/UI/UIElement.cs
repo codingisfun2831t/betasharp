@@ -70,6 +70,11 @@ public class UIElement
 
     public virtual void Render(Rendering.UIRenderer renderer)
     {
+        if (Style.BackgroundColor is { } bg)
+        {
+            renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, bg);
+        }
+
         foreach (UIElement child in Children)
         {
             renderer.PushTranslate(child.ComputedX, child.ComputedY);

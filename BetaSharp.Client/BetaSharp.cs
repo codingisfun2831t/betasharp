@@ -36,6 +36,7 @@ using BetaSharp.Worlds.Core;
 using BetaSharp.Worlds.Core.Systems;
 using BetaSharp.Worlds.Storage;
 using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 using BetaSharp.Client.UI.Test;
 using ImGuiNET;
 using Microsoft.Extensions.Logging;
@@ -366,7 +367,7 @@ public partial class BetaSharp
         }
         else
         {
-            displayGuiScreen(new UIScreenAdapter(new ComplexUIDemoScreen(this)));
+            displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(this)));
         }
     }
 

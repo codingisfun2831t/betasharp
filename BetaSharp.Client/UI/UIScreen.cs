@@ -33,7 +33,7 @@ public abstract class UIScreen
         Root.Update(partialTicks);
     }
 
-    public void Render(int mouseX, int mouseY, float partialTicks)
+    public virtual void Render(int mouseX, int mouseY, float partialTicks)
     {
         ScaledResolution res = new(Game.options, Game.displayWidth, Game.displayHeight);
 
@@ -49,7 +49,7 @@ public abstract class UIScreen
 
         Renderer.Begin();
         Root.Render(Renderer);
-        UIRenderer.End();
+        Renderer.End();
     }
 
     private void UpdateHovers(float mouseX, float mouseY)
@@ -88,9 +88,9 @@ public abstract class UIScreen
 
             if (FocusedElement != target)
             {
-                if (FocusedElement != null) FocusedElement.IsFocused = false;
+                FocusedElement?.IsFocused = false;
                 FocusedElement = target;
-                if (FocusedElement != null) FocusedElement.IsFocused = true;
+                FocusedElement?.IsFocused = true;
             }
 
             if (target != null)

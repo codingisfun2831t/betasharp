@@ -40,8 +40,15 @@ public static class FlexLayout
         node.nodeStyle.Padding[(int)Edge.Left] = new Value(element.Style.PaddingLeft, Unit.Point);
         node.nodeStyle.Padding[(int)Edge.Right] = new Value(element.Style.PaddingRight, Unit.Point);
 
+        // Map absolute positioning
+        node.StyleSetPositionType(element.Style.Position);
+        if (element.Style.Top.HasValue) node.StyleSetPosition(Edge.Top, element.Style.Top.Value);
+        if (element.Style.Bottom.HasValue) node.StyleSetPosition(Edge.Bottom, element.Style.Bottom.Value);
+        if (element.Style.Left.HasValue) node.StyleSetPosition(Edge.Left, element.Style.Left.Value);
+        if (element.Style.Right.HasValue) node.StyleSetPosition(Edge.Right, element.Style.Right.Value);
+
         // Add custom text bounds callbacks for leaves
-        if (element is Controls.Label || element is Controls.Button || element is Controls.TextField)
+        if (element is Controls.Label || element is Controls.Button || element is Controls.TextField || element is Screens.MainMenuSplash)
         {
             node.SetMeasureFunc((n, w, wm, h, hm) => {
                 element.Measure(w, h);
