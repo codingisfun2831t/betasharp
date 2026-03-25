@@ -17,6 +17,9 @@ public class TextField : UIElement
         Style.Width = 200;
         Style.Height = 20;
 
+        OnMouseEnter += (_) => IsHovered = true;
+        OnMouseLeave += (_) => IsHovered = false;
+
         OnMouseDown += (e) =>
         {
             if (e.Button == MouseButton.Left)
@@ -65,7 +68,7 @@ public class TextField : UIElement
     {
         renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, Color.Black);
 
-        Color borderColor = IsFocused ? Color.White : Color.GrayA0;
+        Color borderColor = IsFocused ? Color.White : (IsHovered ? Color.GrayCC : Color.GrayA0);
         renderer.DrawRect(0, 0, ComputedWidth, 1, borderColor);
         renderer.DrawRect(0, ComputedHeight - 1, ComputedWidth, 1, borderColor);
         renderer.DrawRect(0, 0, 1, ComputedHeight, borderColor);
