@@ -20,13 +20,13 @@ public static class FlexLayout
         node.nodeStyle.AlignItems = element.Style.AlignItems;
         node.nodeStyle.AlignSelf = element.Style.AlignSelf;
         node.nodeStyle.JustifyContent = element.Style.JustifyContent;
-        
+
         node.nodeStyle.FlexGrow = element.Style.FlexGrow;
         node.nodeStyle.FlexShrink = element.Style.FlexShrink;
 
         if (element.Style.Width.HasValue)
             node.nodeStyle.Dimensions[(int)Dimension.Width] = new Value(element.Style.Width.Value, Unit.Point);
-        
+
         if (element.Style.Height.HasValue)
             node.nodeStyle.Dimensions[(int)Dimension.Height] = new Value(element.Style.Height.Value, Unit.Point);
 
@@ -50,7 +50,8 @@ public static class FlexLayout
         // Add custom text bounds callbacks for leaves
         if (element is Controls.Label || element is Controls.Button || element is Controls.TextField || element is Screens.MainMenuSplash)
         {
-            node.SetMeasureFunc((n, w, wm, h, hm) => {
+            node.SetMeasureFunc((n, w, wm, h, hm) =>
+            {
                 element.Measure(w, h);
                 return new Size(element.ComputedWidth, element.ComputedHeight);
             });
@@ -70,7 +71,7 @@ public static class FlexLayout
         element.ComputedHeight = node.layout.height;
         element.ComputedX = node.layout.left;
         element.ComputedY = node.layout.top;
-        
+
         element.OnLayoutApplied();
 
         for (int i = 0; i < element.Children.Count; i++)

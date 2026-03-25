@@ -3,22 +3,23 @@ using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Core.Textures;
+using Silk.NET.Maths;
 
 namespace BetaSharp.Client.UI.Rendering;
 
 public class UIRenderer
 {
     private readonly TextRenderer _textRenderer;
-    public TextureManager TextureManager => _textureManager;
-    private readonly TextureManager _textureManager;
+    public TextureManager TextureManager { get; }
 
     private float _translateX = 0;
     private float _translateY = 0;
+    private readonly Stack<Vector2D<float>> _translationStack = new();
 
     public UIRenderer(TextRenderer textRenderer, TextureManager textureManager)
     {
         _textRenderer = textRenderer;
-        _textureManager = textureManager;
+        TextureManager = textureManager;
     }
 
     public void Begin()
@@ -29,6 +30,7 @@ public class UIRenderer
 
         _translateX = 0;
         _translateY = 0;
+        _translationStack.Clear();
     }
 
     public void End()
@@ -38,14 +40,28 @@ public class UIRenderer
 
     public void PushTranslate(float x, float y)
     {
+        _translationStack.Push(new(_translateX, _translateY));
         _translateX += x;
         _translateY += y;
     }
 
     public void PopTranslate(float x, float y)
     {
-        _translateX -= x;
-        _translateY -= y;
+        if (_translationStack.Count > 0)
+        {
+            Vector2D<float> prev = _translationStack.Pop();
+            _translateX = prev.X;
+            _translateY = prev.Y;
+        }
+        else
+        {
+            _translateX = 0;
+            _translateY = 0;
+        }
+
+        // Stability
+        if (MathF.Abs(_translateX) < 0.0001f) _translateX = 0;
+        if (MathF.Abs(_translateY) < 0.0001f) _translateY = 0;
     }
 
     public void EnableClipping(int x, int y, int width, int height)
@@ -61,27 +77,27 @@ public class UIRenderer
         int physicalHeight = (height * scale);
         int physicalY = scaledWindowHeight - (int)((y + _translateY) * scale) - physicalHeight;
 
-        GLManager.GL.Enable((Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
+        GLManager.GL.Enable(GLEnum.ScissorTest);
         GLManager.GL.Scissor(physicalX, physicalY, (uint)physicalWidth, (uint)physicalHeight);
     }
 
     public void DisableClipping()
     {
-        GLManager.GL.Disable((Client.Rendering.Core.OpenGL.GLEnum)0x0C11);
+        GLManager.GL.Disable(GLEnum.ScissorTest);
     }
 
     public void DrawRect(float x, float y, float width, float height, Color color)
     {
-        int ix1 = (int)(x + _translateX);
-        int iy1 = (int)(y + _translateY);
-        int ix2 = ix1 + (int)width;
-        int iy2 = iy1 + (int)height;
+        int ix1 = (int)MathF.Floor(x + _translateX);
+        int iy1 = (int)MathF.Floor(y + _translateY);
+        int ix2 = (int)MathF.Floor(x + _translateX + width);
+        int iy2 = (int)MathF.Floor(y + _translateY + height);
         Gui.DrawRect(ix1, iy1, ix2, iy2, color);
     }
 
     public void DrawText(string text, float x, float y, Color color)
     {
-        _textRenderer.DrawStringWithShadow(text, (int)(x + _translateX), (int)(y + _translateY), color);
+        _textRenderer.DrawStringWithShadow(text, (int)MathF.Floor(x + _translateX), (int)MathF.Floor(y + _translateY), color);
     }
 
     public void DrawCenteredText(string text, float x, float y, Color color, float rotation = 0, float scale = 1.0f)
@@ -104,7 +120,7 @@ public class UIRenderer
 
     public void DrawTexture(TextureHandle texture, float x, float y, float width, float height)
     {
-        _textureManager.BindTexture(texture);
+        TextureManager.BindTexture(texture);
         Tessellator tess = Tessellator.instance;
         float finalX = x + _translateX;
         float finalY = y + _translateY;
@@ -119,7 +135,7 @@ public class UIRenderer
 
     public void DrawTexturedModalRect(TextureHandle texture, float x, float y, float u, float v, float width, float height)
     {
-        _textureManager.BindTexture(texture);
+        TextureManager.BindTexture(texture);
         float f = 0.00390625F;
         Tessellator tess = Tessellator.instance;
         float finalX = x + _translateX;
@@ -135,7 +151,7 @@ public class UIRenderer
 
     public void DrawRepeatingTexture(TextureHandle texture, float x, float y, float width, float height, float textureScale, float scrollOffsetY = 0f)
     {
-        _textureManager.BindTexture(texture);
+        TextureManager.BindTexture(texture);
         Tessellator tess = Tessellator.instance;
 
         float finalX = x + _translateX;
@@ -163,16 +179,16 @@ public class UIRenderer
 
         // Bottom-Right
         tess.setColorRGBA(bottomColor);
-        tess.addVertex(finalX + width, finalY + height, 0.0);
+        tess.addVertex((double)(finalX + width), (double)(finalY + height), 0.0);
         // Bottom-Left
         tess.setColorRGBA(bottomColor);
-        tess.addVertex(finalX, finalY + height, 0.0);
+        tess.addVertex((double)finalX, (double)(finalY + height), 0.0);
         // Top-Left
         tess.setColorRGBA(topColor);
-        tess.addVertex(finalX, finalY, 0.0);
+        tess.addVertex((double)finalX, (double)finalY, 0.0);
         // Top-Right
         tess.setColorRGBA(topColor);
-        tess.addVertex(finalX + width, finalY, 0.0);
+        tess.addVertex((double)(finalX + width), (double)finalY, 0.0);
 
         tess.draw();
         GLManager.GL.Enable(GLEnum.Texture2D);

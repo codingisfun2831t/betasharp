@@ -34,7 +34,13 @@ public class ScrollView : UIElement
                 {
                     _isDraggingScrollbar = true;
                     _dragStartY = e.MouseY;
-                    _dragInitialScrollY = ScrollY;
+
+                    float viewRatio = Math.Min(1.0f, ComputedHeight / ContentContainer.ComputedHeight);
+                    float barHeight = Math.Max(32f, ComputedHeight * viewRatio);
+                    float maxBarScroll = ComputedHeight - barHeight;
+                    float scrollProgress = MaxScrollY > 0 ? ScrollY / MaxScrollY : 0;
+
+                    _dragInitialScrollY = scrollProgress * maxBarScroll;
                 }
                 else
                 {
@@ -51,15 +57,15 @@ public class ScrollView : UIElement
             {
                 float dragDelta = e.MouseY - _dragStartY;
 
-                float viewRatio = ComputedHeight / ContentContainer.ComputedHeight;
+                float viewRatio = Math.Min(1.0f, ComputedHeight / ContentContainer.ComputedHeight);
                 float barHeight = Math.Max(32f, ComputedHeight * viewRatio);
                 float maxBarScroll = ComputedHeight - barHeight;
 
                 if (maxBarScroll > 0)
                 {
-                    float ratio = MaxScrollY / maxBarScroll;
-                    ScrollY = _dragInitialScrollY + (dragDelta * ratio);
-                    ScrollY = Math.Clamp(ScrollY, 0, MaxScrollY);
+                    float newThumbY = _dragInitialScrollY + dragDelta;
+                    float scrollProgress = Math.Clamp(newThumbY / maxBarScroll, 0, 1);
+                    ScrollY = scrollProgress * MaxScrollY;
                     FixContentOffset();
                 }
                 e.Handled = true;
