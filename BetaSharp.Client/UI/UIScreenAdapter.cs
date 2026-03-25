@@ -4,7 +4,7 @@ namespace BetaSharp.Client.UI;
 
 public class UIScreenAdapter : GuiScreen
 {
-    private UIScreen _screen;
+    private readonly UIScreen _screen;
 
     public UIScreenAdapter(UIScreen screen)
     {

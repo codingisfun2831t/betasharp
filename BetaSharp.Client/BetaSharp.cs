@@ -1928,6 +1928,7 @@ public partial class BetaSharp
         if (playerName != null && sessionToken != null)
         {
             game.session = new Session(playerName, sessionToken);
+            game.session.sessionId = "wdad";
 
             if (sessionToken == "-")
             {

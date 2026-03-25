@@ -8,6 +8,7 @@ namespace BetaSharp.Client.UI.Rendering;
 public class UIRenderer
 {
     private readonly TextRenderer _textRenderer;
+    public TextureManager TextureManager => _textureManager;
     private readonly TextureManager _textureManager;
 
     private float _translateX = 0;

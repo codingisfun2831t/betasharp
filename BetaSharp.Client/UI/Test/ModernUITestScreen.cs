@@ -12,6 +12,7 @@ public class ModernUITestScreen : UIScreen
 
     protected override void Init()
     {
+        Root.AddChild(new Background());
 
         // Root is automatically a Column layout by default
         Root.Style.AlignItems = Align.Center;

@@ -1,5 +1,4 @@
 using BetaSharp.Client.Guis;
-using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.UI.Controls;
 using BetaSharp.Client.UI.Layout.Flexbox;
 
@@ -15,6 +14,8 @@ public class MainMenuScreen : UIScreen
     {
         Root.Style.AlignItems = Align.Center;
         Root.Style.JustifyContent = Justify.Center;
+
+        Root.AddChild(new Background());
 
         // --- Logo and Splash ---
         Panel headerPanel = new();
@@ -43,7 +44,7 @@ public class MainMenuScreen : UIScreen
         Root.AddChild(btnSingleplayer);
 
         Button btnMultiplayer = new() { Text = translator.TranslateKey("menu.multiplayer") };
-        btnMultiplayer.OnClick += (e) => Game.displayGuiScreen(new GuiMultiplayer(new UIScreenAdapter(this), Game.options));
+        btnMultiplayer.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new MultiplayerScreen(Game)));
         btnMultiplayer.Style.MarginBottom = 4;
 
         if (Game.session == null || Game.session.sessionId == "-")
@@ -105,8 +106,8 @@ public class MainMenuScreen : UIScreen
             };
             System.Diagnostics.Process.Start(ps);
         };
-        versionLabel.OnMouseEnter += (e) => versionLabel.TextColor = Guis.Color.HoverYellow;
-        versionLabel.OnMouseLeave += (e) => versionLabel.TextColor = Guis.Color.White;
+        versionLabel.OnMouseEnter += (e) => versionLabel.TextColor = Color.HoverYellow;
+        versionLabel.OnMouseLeave += (e) => versionLabel.TextColor = Color.White;
 
         Root.AddChild(versionLabel);
 
@@ -114,22 +115,12 @@ public class MainMenuScreen : UIScreen
         Panel copyrightPanel = new();
         copyrightPanel.Style.Position = PositionType.Absolute;
         copyrightPanel.Style.Bottom = 2;
-        copyrightPanel.Style.Left = 2;
-        copyrightPanel.Style.AlignItems = Align.FlexStart;
+        copyrightPanel.Style.Right = 2;
+        copyrightPanel.Style.AlignItems = Align.FlexEnd;
 
-        copyrightPanel.AddChild(new Label { Text = "Copyright Mojang Studios. Not an official Minecraft product.", TextColor = Guis.Color.White });
-        copyrightPanel.AddChild(new Label { Text = "Not approved by or associated with Mojang Studios or Microsoft.", TextColor = Guis.Color.White });
+        copyrightPanel.AddChild(new Label { Text = "Copyright Mojang Studios. Not an official Minecraft product.", TextColor = Color.White });
+        copyrightPanel.AddChild(new Label { Text = "Not approved by or associated with Mojang Studios or Microsoft.", TextColor = Color.White });
 
         Root.AddChild(copyrightPanel);
-    }
-
-    public override void Render(int mouseX, int mouseY, float partialTicks)
-    {
-        Renderer.Begin();
-        TextureHandle backgroundTexture = Game.textureManager.GetTextureId("/gui/background.png");
-        Renderer.DrawRepeatingTexture(backgroundTexture, 0, 0, Root.ComputedWidth, Root.ComputedHeight, 32f);
-        Renderer.End();
-
-        base.Render(mouseX, mouseY, partialTicks);
     }
 }
