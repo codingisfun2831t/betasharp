@@ -73,8 +73,8 @@ public class UIRenderer
         int scaledWindowHeight = game.displayHeight;
 
         int physicalX = (int)((x + _translateX) * scale);
-        int physicalWidth = (width * scale);
-        int physicalHeight = (height * scale);
+        int physicalWidth = width * scale;
+        int physicalHeight = height * scale;
         int physicalY = scaledWindowHeight - (int)((y + _translateY) * scale) - physicalHeight;
 
         GLManager.GL.Enable(GLEnum.ScissorTest);
@@ -93,6 +93,15 @@ public class UIRenderer
         int ix2 = (int)MathF.Floor(x + _translateX + width);
         int iy2 = (int)MathF.Floor(y + _translateY + height);
         Gui.DrawRect(ix1, iy1, ix2, iy2, color);
+    }
+
+    public void DrawGradientRect(float x, float y, float width, float height, Color topColor, Color bottomColor)
+    {
+        int ix1 = (int)MathF.Floor(x + _translateX);
+        int iy1 = (int)MathF.Floor(y + _translateY);
+        int ix2 = (int)MathF.Floor(x + _translateX + width);
+        int iy2 = (int)MathF.Floor(y + _translateY + height);
+        Gui.DrawGradientRect(ix1, iy1, ix2, iy2, topColor, bottomColor);
     }
 
     public void DrawText(string text, float x, float y, Color color)

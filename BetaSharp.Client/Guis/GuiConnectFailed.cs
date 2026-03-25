@@ -1,3 +1,6 @@
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
+
 namespace BetaSharp.Client.Guis;
 
 public class GuiConnectFailed : GuiScreen
@@ -43,7 +46,7 @@ public class GuiConnectFailed : GuiScreen
         switch (btt.Id)
         {
             case _buttonToMenu:
-                Game.displayGuiScreen(new GuiMainMenu());
+                Game.displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(Game)));
                 break;
         }
 

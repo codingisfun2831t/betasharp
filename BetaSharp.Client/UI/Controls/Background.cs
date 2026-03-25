@@ -4,8 +4,15 @@ using BetaSharp.Client.UI.Rendering;
 
 namespace BetaSharp.Client.UI.Controls;
 
+public enum BackgroundType
+{
+    Dirt,
+    World
+}
+
 public class Background : UIElement
 {
+    public BackgroundType Type { get; set; } = BackgroundType.Dirt;
     public string TexturePath { get; set; } = "/gui/background.png";
     public float Scale { get; set; } = 32.0f;
 
@@ -18,10 +25,22 @@ public class Background : UIElement
         Style.Bottom = 0;
     }
 
+    public Background(BackgroundType type) : this()
+    {
+        Type = type;
+    }
+
     public override void Render(UIRenderer renderer)
     {
-        TextureHandle texture = renderer.TextureManager.GetTextureId(TexturePath);
-        renderer.DrawRepeatingTexture(texture, 0, 0, ComputedWidth, ComputedHeight, Scale);
+        if (Type == BackgroundType.World)
+        {
+            renderer.DrawGradientRect(0, 0, ComputedWidth, ComputedHeight, Guis.Color.WorldBackgroundDark, Guis.Color.WorldBackground);
+        }
+        else
+        {
+            TextureHandle texture = renderer.TextureManager.GetTextureId(TexturePath);
+            renderer.DrawRepeatingTexture(texture, 0, 0, ComputedWidth, ComputedHeight, Scale);
+        }
         base.Render(renderer);
     }
 }

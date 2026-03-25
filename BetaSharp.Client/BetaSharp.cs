@@ -74,6 +74,7 @@ public partial class BetaSharp
     public SkinManager skinManager;
     public TextRenderer fontRenderer;
     public GuiScreen currentScreen;
+    public bool IsMainMenuOpen => currentScreen is UIScreenAdapter { Screen: MainMenuScreen };
     public LoadingScreenRenderer loadingScreen;
     public GameRenderer gameRenderer;
     public PostProcessManager PostProcessManager { get; private set; }
@@ -438,7 +439,7 @@ public partial class BetaSharp
         Controller.ClearEvents();
         currentScreen?.OnGuiClosed();
 
-        if (newScreen is GuiMainMenu)
+        if (newScreen is UIScreenAdapter { Screen: MainMenuScreen })
         {
             statFileWriter.Tick();
 
@@ -458,7 +459,7 @@ public partial class BetaSharp
             newScreen = new GuiGameOver();
         }
 
-        if (newScreen is GuiMainMenu)
+        if (newScreen is UIScreenAdapter { Screen: MainMenuScreen })
         {
             ingameGUI.ClearChatMessages();
         }
@@ -1064,7 +1065,7 @@ public partial class BetaSharp
     {
         if (currentScreen == null)
         {
-            displayGuiScreen(new GuiIngameMenu());
+            displayGuiScreen(new UIScreenAdapter(new IngameMenuScreen(this)));
         }
     }
 
@@ -1692,7 +1693,7 @@ public partial class BetaSharp
         displayGuiScreen(new GuiLevelLoading(worldName, settings));
     }
 
-    public void changeWorld(World newWorld, string loadingText = "", EntityPlayer targetEntity = null)
+    public void changeWorld(World? newWorld, string loadingText = "", EntityPlayer targetEntity = null)
     {
         statFileWriter.Tick();
         statFileWriter.SyncStats();
@@ -1701,7 +1702,7 @@ public partial class BetaSharp
         loadingScreen.progressStage("");
         sndManager.PlayStreaming(null!, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
 
-        world = newWorld;
+        world = newWorld!;
         if (newWorld != null)
         {
             playerController.func_717_a(newWorld);

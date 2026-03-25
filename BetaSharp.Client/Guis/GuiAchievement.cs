@@ -137,7 +137,7 @@ public class GuiAchievement : Gui
         UpdateAchievementWindowScale();
 
         int y = 2;
-        if (_theGame.currentScreen is GuiMainMenu) y += 9;
+        if (_theGame.IsMainMenuOpen) y += 9;
         _theGame.fontRenderer.DrawStringWithShadow(LicenseWarningText, 2, y, Color.White);
         _theGame.fontRenderer.DrawStringWithShadow(AltLocationWarningText, 2, y + 9, Color.White);
         _theGame.fontRenderer.DrawStringWithShadow(PurchasePromptText, 2, y + 18, Color.White);

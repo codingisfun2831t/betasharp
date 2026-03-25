@@ -1,4 +1,6 @@
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 
 namespace BetaSharp.Client.Guis;
 
@@ -43,7 +45,7 @@ public class GuiGameOver : GuiScreen
                 break;
             case ButtonTitle:
                 Game.changeWorld(null);
-                Game.displayGuiScreen(new GuiMainMenu());
+                Game.displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(Game)));
                 break;
         }
 

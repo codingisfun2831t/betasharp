@@ -1,6 +1,8 @@
 using BetaSharp.Client.Network;
 using BetaSharp.Client.Threading;
 using Microsoft.Extensions.Logging;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 
 namespace BetaSharp.Client.Guis;
 
@@ -55,7 +57,7 @@ public class GuiConnecting : GuiScreen
                 _cancelled = true;
                 _clientHandler?.disconnect();
 
-                Game.displayGuiScreen(new GuiMainMenu());
+                Game.displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(Game)));
                 break;
         }
 

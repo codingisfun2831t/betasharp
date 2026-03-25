@@ -1,3 +1,6 @@
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
+
 namespace BetaSharp.Client.Guis;
 
 public class GuiConflictWarning : GuiScreen
@@ -22,7 +25,7 @@ public class GuiConflictWarning : GuiScreen
         {
             if (btt.Id == 0)
             {
-                Game.displayGuiScreen(new GuiMainMenu());
+                Game.displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(Game)));
             }
         }
     }

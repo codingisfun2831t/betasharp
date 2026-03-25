@@ -2,45 +2,46 @@ using BetaSharp.Client.Guis;
 
 namespace BetaSharp.Client.UI;
 
+//TODO: REMOVE THIS ONCE LEGACY GUIS ARE PORTED
 public class UIScreenAdapter : GuiScreen
 {
-    private readonly UIScreen _screen;
+    public UIScreen Screen { get; }
 
     public UIScreenAdapter(UIScreen screen)
     {
-        _screen = screen;
+        Screen = screen;
     }
 
     public override void InitGui()
     {
-        _screen.Game = Game;
-        _screen.Initialize();
+        Screen.Game = Game;
+        Screen.Initialize();
         Input.Keyboard.enableRepeatEvents(true);
     }
 
     public override void OnGuiClosed()
     {
-        _screen.Uninit();
+        Screen.Uninit();
         Input.Keyboard.enableRepeatEvents(false);
     }
 
     public override void Render(int mouseX, int mouseY, float partialTicks)
     {
-        _screen.Render(mouseX, mouseY, partialTicks);
+        Screen.Render(mouseX, mouseY, partialTicks);
     }
 
     public override void UpdateScreen()
     {
-        _screen.Update(1.0f);
+        Screen.Update(1.0f);
     }
 
     public override void HandleMouseInput()
     {
-        _screen.HandleMouseInput();
+        Screen.HandleMouseInput();
     }
 
     public override void HandleKeyboardInput()
     {
-        _screen.HandleKeyboardInput();
+        Screen.HandleKeyboardInput();
     }
 }
