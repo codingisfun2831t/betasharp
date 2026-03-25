@@ -14,6 +14,7 @@ public class UIScreenAdapter : GuiScreen
     public override void InitGui()
     {
         _screen.Game = Game;
+        _screen.Initialize();
         Input.Keyboard.enableRepeatEvents(true);
     }
 

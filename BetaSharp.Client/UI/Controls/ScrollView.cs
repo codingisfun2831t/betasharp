@@ -1,5 +1,4 @@
 using BetaSharp.Client.Guis;
-using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.UI.Layout;
 using BetaSharp.Client.UI.Rendering;
 
@@ -146,9 +145,6 @@ public class ScrollView : UIElement
 
     public override void Render(UIRenderer renderer)
     {
-        TextureHandle bgTexture = BetaSharp.Instance.textureManager.GetTextureId("/gui/background.png");
-        renderer.DrawRepeatingTexture(bgTexture, 0, 0, ComputedWidth, ComputedHeight, 32.0f, ScrollY);
-
         renderer.EnableClipping(0, 0, (int)ComputedWidth, (int)ComputedHeight);
 
         renderer.PushTranslate(ContentContainer.ComputedX, ContentContainer.ComputedY);
@@ -157,14 +153,12 @@ public class ScrollView : UIElement
 
         renderer.DisableClipping();
 
-        renderer.DrawGradientRect(0, 0, ComputedWidth, 4, new Color(0, 0, 0, 255), new Color(0, 0, 0, 0));
-        renderer.DrawGradientRect(0, ComputedHeight - 4, ComputedWidth, 4, new Color(0, 0, 0, 0), new Color(0, 0, 0, 255));
-
-        renderer.DrawRect(ComputedWidth - 10, 0, 10, ComputedHeight, Color.Black);
-
         if (MaxScrollY > 0 && ContentContainer.ComputedHeight > 0)
         {
-            float viewRatio = ComputedHeight / ContentContainer.ComputedHeight;
+            // Black track
+            renderer.DrawRect(ComputedWidth - 10, 0, 10, ComputedHeight, Color.BlackAlphaC0);
+
+            float viewRatio = Math.Min(1.0f, ComputedHeight / ContentContainer.ComputedHeight);
             float barHeight = Math.Max(32f, ComputedHeight * viewRatio);
 
             float scrollProgress = ScrollY / MaxScrollY;

@@ -14,6 +14,8 @@ public abstract class UIScreen
     public UIElement? FocusedElement { get; set; }
     public UIElement? DraggingElement { get; set; }
 
+    private bool _isInitialized = false;
+
     public UIScreen(BetaSharp game)
     {
         Game = game;
@@ -22,6 +24,12 @@ public abstract class UIScreen
         Root.Style.Height = null;
         Renderer = new UIRenderer(game.fontRenderer, game.textureManager);
 
+    }
+ 
+    public void Initialize()
+    {
+        if (_isInitialized) return;
+        _isInitialized = true;
         Init();
     }
 

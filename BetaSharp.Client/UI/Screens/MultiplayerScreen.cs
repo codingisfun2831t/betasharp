@@ -1,8 +1,6 @@
 using BetaSharp.Client.Guis;
-using BetaSharp.Client.Rendering.Core.Textures;
 using BetaSharp.Client.UI.Controls;
 using BetaSharp.Client.UI.Layout.Flexbox;
-using BetaSharp.Client.UI.Rendering;
 using BetaSharp.NBT;
 
 namespace BetaSharp.Client.UI.Screens;
@@ -38,58 +36,71 @@ public class MultiplayerScreen : UIScreen
         _scrollView.Style.Width = 300;
         _scrollView.Style.FlexGrow = 1;
         _scrollView.Style.MarginBottom = 10;
+        _scrollView.Style.BackgroundColor = Color.BackgroundBlackAlpha;
         Root.AddChild(_scrollView);
 
         PopulateServerList();
 
-        Panel buttonPanel = new();
-        buttonPanel.Style.FlexDirection = FlexDirection.Row;
-        buttonPanel.Style.JustifyContent = Justify.Center;
-        buttonPanel.Style.Width = 310;
+        Panel buttonContainer = new();
+        buttonContainer.Style.FlexDirection = FlexDirection.Column;
+        buttonContainer.Style.AlignItems = Align.Center;
+        buttonContainer.Style.Width = 320;
+
+        Panel row1 = new();
+        row1.Style.FlexDirection = FlexDirection.Row;
+        row1.Style.JustifyContent = Justify.Center;
+        row1.Style.MarginBottom = 2;
 
         _btnJoin = new Button { Text = "Join Server" };
-        _btnJoin.Style.Width = 150;
+        _btnJoin.Style.Width = 100;
         _btnJoin.Style.SetMargin(2);
         _btnJoin.OnClick += (e) => ConnectSelected();
-        buttonPanel.AddChild(_btnJoin);
+        row1.AddChild(_btnJoin);
 
-        Button btnDirect = new Button { Text = "Direct Connect" };
-        btnDirect.Style.Width = 150;
+        Button btnDirect = new() { Text = "Direct Connect" };
+        btnDirect.Style.Width = 100;
         btnDirect.Style.SetMargin(2);
         btnDirect.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new DirectConnectScreen(Game, this, new ServerData("BetaSharp Server", ""))));
-        buttonPanel.AddChild(btnDirect);
+        row1.AddChild(btnDirect);
 
-        Button btnAdd = new Button { Text = "Add Server" };
+        Button btnAdd = new() { Text = "Add Server" };
         btnAdd.Style.Width = 100;
         btnAdd.Style.SetMargin(2);
         btnAdd.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new EditServerScreen(Game, this, new ServerData("BetaSharp Server", ""), false)));
-        buttonPanel.AddChild(btnAdd);
+        row1.AddChild(btnAdd);
+
+        buttonContainer.AddChild(row1);
+
+        Panel row2 = new();
+        row2.Style.FlexDirection = FlexDirection.Row;
+        row2.Style.JustifyContent = Justify.Center;
 
         _btnEdit = new Button { Text = "Edit" };
-        _btnEdit.Style.Width = 100;
+        _btnEdit.Style.Width = 75;
         _btnEdit.Style.SetMargin(2);
         _btnEdit.OnClick += (e) => EditSelected();
-        buttonPanel.AddChild(_btnEdit);
+        row2.AddChild(_btnEdit);
 
         _btnDelete = new Button { Text = "Delete" };
-        _btnDelete.Style.Width = 100;
+        _btnDelete.Style.Width = 75;
         _btnDelete.Style.SetMargin(2);
         _btnDelete.OnClick += (e) => DeleteSelected();
-        buttonPanel.AddChild(_btnDelete);
+        row2.AddChild(_btnDelete);
 
-        Button btnRefresh = new Button { Text = "Refresh" };
-        btnRefresh.Style.Width = 150;
+        Button btnRefresh = new() { Text = "Refresh" };
+        btnRefresh.Style.Width = 75;
         btnRefresh.Style.SetMargin(2);
         btnRefresh.OnClick += (e) => { LoadServerList(); PopulateServerList(); };
-        buttonPanel.AddChild(btnRefresh);
+        row2.AddChild(btnRefresh);
 
-        Button btnCancel = new Button { Text = "Cancel" };
-        btnCancel.Style.Width = 150;
+        Button btnCancel = new() { Text = "Cancel" };
+        btnCancel.Style.Width = 75;
         btnCancel.Style.SetMargin(2);
         btnCancel.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new MainMenuScreen(Game)));
-        buttonPanel.AddChild(btnCancel);
+        row2.AddChild(btnCancel);
 
-        Root.AddChild(buttonPanel);
+        buttonContainer.AddChild(row2);
+        Root.AddChild(buttonContainer);
 
         UpdateButtons();
     }
@@ -152,7 +163,7 @@ public class MultiplayerScreen : UIScreen
     private void SelectServer(int index)
     {
         _selectedServerIndex = index;
-        foreach (var item in _listItems) item.IsSelected = false;
+        foreach (ServerListItem item in _listItems) item.IsSelected = false;
         if (index >= 0 && index < _listItems.Count) _listItems[index].IsSelected = true;
         UpdateButtons();
     }

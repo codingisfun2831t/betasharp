@@ -1,8 +1,6 @@
 using BetaSharp.Client.Guis;
 using BetaSharp.Client.UI.Controls;
 using BetaSharp.Client.UI.Layout.Flexbox;
-using BetaSharp.Client.UI.Rendering;
-using BetaSharp.Client.Rendering.Core.Textures;
 
 namespace BetaSharp.Client.UI.Screens;
 
@@ -42,11 +40,11 @@ public class ConfirmationScreen : UIScreen
 
         Panel buttonPanel = new();
         buttonPanel.Style.FlexDirection = FlexDirection.Row;
-        
+
         Button btnConfirm = new() { Text = _confirmText };
         btnConfirm.Style.Width = 100;
         btnConfirm.Style.SetMargin(0, 4, 0, 0);
-        btnConfirm.OnClick += (e) => 
+        btnConfirm.OnClick += (e) =>
         {
             _callback(true);
             Game.displayGuiScreen(new UIScreenAdapter(_parent));
@@ -55,7 +53,7 @@ public class ConfirmationScreen : UIScreen
 
         Button btnCancel = new() { Text = _cancelText };
         btnCancel.Style.Width = 100;
-        btnCancel.OnClick += (e) => 
+        btnCancel.OnClick += (e) =>
         {
             _callback(false);
             Game.displayGuiScreen(new UIScreenAdapter(_parent));

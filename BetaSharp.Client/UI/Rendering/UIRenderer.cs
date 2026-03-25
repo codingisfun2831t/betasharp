@@ -1,6 +1,7 @@
 using BetaSharp.Client.Guis;
 using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Core;
+using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Core.Textures;
 
 namespace BetaSharp.Client.UI.Rendering;
@@ -22,6 +23,8 @@ public class UIRenderer
 
     public void Begin()
     {
+        GLManager.GL.Enable(GLEnum.Blend);
+        GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
         GLManager.GL.PushMatrix();
 
         _translateX = 0;
@@ -154,6 +157,7 @@ public class UIRenderer
         float finalX = x + _translateX;
         float finalY = y + _translateY;
 
+        GLManager.GL.Disable(GLEnum.Texture2D);
         Tessellator tess = Tessellator.instance;
         tess.startDrawingQuads();
 
@@ -171,5 +175,6 @@ public class UIRenderer
         tess.addVertex(finalX + width, finalY, 0.0);
 
         tess.draw();
+        GLManager.GL.Enable(GLEnum.Texture2D);
     }
 }
