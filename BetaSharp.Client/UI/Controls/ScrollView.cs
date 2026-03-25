@@ -161,7 +161,7 @@ public class ScrollView : UIElement
 
         if (MaxScrollY > 0 && ContentContainer.ComputedHeight > 0)
         {
-            // Black track
+            // track
             renderer.DrawRect(ComputedWidth - 10, 0, 10, ComputedHeight, Color.BlackAlphaC0);
 
             float viewRatio = Math.Min(1.0f, ComputedHeight / ContentContainer.ComputedHeight);

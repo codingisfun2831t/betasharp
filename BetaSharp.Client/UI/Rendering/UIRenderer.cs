@@ -167,30 +167,4 @@ public class UIRenderer
         tess.addVertexWithUV(finalX, finalY, 0.0, finalX / textureScale, (finalY + scrollOffsetY) / textureScale);
         tess.draw();
     }
-
-    public void DrawGradientRect(float x, float y, float width, float height, Color topColor, Color bottomColor)
-    {
-        float finalX = x + _translateX;
-        float finalY = y + _translateY;
-
-        GLManager.GL.Disable(GLEnum.Texture2D);
-        Tessellator tess = Tessellator.instance;
-        tess.startDrawingQuads();
-
-        // Bottom-Right
-        tess.setColorRGBA(bottomColor);
-        tess.addVertex((double)(finalX + width), (double)(finalY + height), 0.0);
-        // Bottom-Left
-        tess.setColorRGBA(bottomColor);
-        tess.addVertex((double)finalX, (double)(finalY + height), 0.0);
-        // Top-Left
-        tess.setColorRGBA(topColor);
-        tess.addVertex((double)finalX, (double)finalY, 0.0);
-        // Top-Right
-        tess.setColorRGBA(topColor);
-        tess.addVertex((double)(finalX + width), (double)finalY, 0.0);
-
-        tess.draw();
-        GLManager.GL.Enable(GLEnum.Texture2D);
-    }
 }
