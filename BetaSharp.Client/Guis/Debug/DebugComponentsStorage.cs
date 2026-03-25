@@ -1,4 +1,5 @@
 using BetaSharp.Client.Guis.Debug.Components;
+using BetaSharp.NBT;
 using Microsoft.Extensions.Logging;
 
 namespace BetaSharp.Client.Guis.Debug;
@@ -15,7 +16,7 @@ public class DebugComponentsStorage
     public DebugComponentsStorage(BetaSharp game, string gameDataDir)
     {
         _game = game;
-        _componentsPath = Path.Combine(gameDataDir, "components.txt");
+        _componentsPath = Path.Combine(gameDataDir, "components.dat");
 
         Overlay = new DebugOverlay(game);
 
@@ -61,33 +62,26 @@ public class DebugComponentsStorage
             }
 
             using StreamReader reader = new(_componentsPath);
-            string? line;
 
-            while ((line = reader.ReadLine()) != null)
-            {
-                try
+            NBTTagCompound tag = NbtIo.Read(reader.BaseStream);
+            NBTTagList list = tag.GetTagList("Components");
+
+            Overlay.Components.Clear();
+
+            for (int i = 0; i < list.TagCount(); i++) {
+                NBTBase nbt = list.TagAt(i);
+
+                if (nbt is NBTTagCompound ntc)
                 {
-                    string[] parts = line.Split(':');
-                    if (parts.Length != 2)
-                    {
-                        _logger.LogWarning("Line \"" + line + "\" isn't valid, must have two parts");
-                        continue;
-                    }
-
-                    DebugComponent? comp = DebugComponents.CreateInstanceFromTypeName(parts[0]);
+                    string type = ntc.GetString("_type");
+                    DebugComponent? comp = DebugComponents.CreateInstanceFromTypeName(type);
                     if (comp is null)
                     {
-                        _logger.LogWarning("\"" + parts[0] + "\" is not a component type.");
-                        continue;
+                        _logger.LogWarning("Component " + i + " is a " + type + ", which couldnt be created!");
                     }
 
-                    comp.Right = parts[1] == "right";
-
+                    comp.read(ntc);
                     Overlay.Components.Add(comp);
-                }
-                catch (Exception)
-                {
-                    _logger.LogError($"Skipping bad option: {line}");
                 }
             }
         }
@@ -103,10 +97,19 @@ public class DebugComponentsStorage
         {
             using var writer = new StreamWriter(_componentsPath);
 
+            NBTTagCompound tag = new NBTTagCompound();
+            NBTTagList list = new NBTTagList();
+
+            tag.SetTag("Components", list);
+
             foreach (DebugComponent comp in Overlay.Components)
             {
-                writer.WriteLine(comp.GetType().Name + ":" + (comp.Right ? "right" : "left"));
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.SetString("_type", comp.GetType().Name);
+                comp.write(nbt);
+                list.SetTag(nbt);
             }
+            NbtIo.Write(tag, writer.BaseStream);
         }
         catch (Exception exception)
         {
