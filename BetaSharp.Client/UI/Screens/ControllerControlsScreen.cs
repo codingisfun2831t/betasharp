@@ -17,55 +17,41 @@ public class ControllerControlsScreen : BaseOptionsScreen
 
     protected override UIElement CreateContent()
     {
-        Panel container = new();
-        container.Style.AlignItems = Align.Center;
-        container.Style.MarginTop = 20;
+        Panel list = CreateVerticalList();
 
-        // Sensitivity & Type row
-        Panel row1 = new();
-        row1.Style.FlexDirection = FlexDirection.Row;
-        row1.Style.JustifyContent = Justify.Center;
-        row1.Style.Width = 340;
-
+        // Sensitivity
         UIElement sens = CreateControlForOption(Options.ControllerSensitivityOption);
-        sens.Style.Width = 150;
-        sens.Style.SetMargin(5);
-        row1.AddChild(sens);
+        sens.Style.Width = 310;
+        sens.Style.MarginBottom = 4;
+        list.AddChild(sens);
 
+        // Controller Type
         UIElement type = CreateControlForOption(Options.ControllerTypeOption);
-        type.Style.Width = 150;
-        type.Style.SetMargin(5);
-        row1.AddChild(type);
-        container.AddChild(row1);
+        type.Style.Width = 310;
+        type.Style.MarginBottom = 10;
+        list.AddChild(type);
 
-        // Bindings and Reset
-        Panel row2 = new();
-        row2.Style.FlexDirection = FlexDirection.Row;
-        row2.Style.JustifyContent = Justify.Center;
-        row2.Style.Width = 340;
-        row2.Style.MarginTop = 10;
-
+        // Edit Bindings Button
         Button btnBindings = new() { Text = "Edit Bindings..." };
-        btnBindings.Style.Width = 150;
-        btnBindings.Style.SetMargin(5);
+        btnBindings.Style.Width = 310;
+        btnBindings.Style.MarginBottom = 4;
         btnBindings.OnClick += (e) =>
         {
             Game.displayGuiScreen(new UIScreenAdapter(new ControllerBindingsScreen(this, Options)));
         };
-        row2.AddChild(btnBindings);
+        list.AddChild(btnBindings);
 
+        // Reset Button
         Button btnReset = new() { Text = "Reset Bindings" };
-        btnReset.Style.Width = 150;
-        btnReset.Style.SetMargin(5);
+        btnReset.Style.Width = 310;
         btnReset.OnClick += (e) =>
         {
             foreach (ControllerBinding cb in Options.ControllerBindings)
                 cb.Button = cb.DefaultButton;
             Options.SaveOptions();
         };
-        row2.AddChild(btnReset);
-        container.AddChild(row2);
+        list.AddChild(btnReset);
 
-        return container;
+        return list;
     }
 }

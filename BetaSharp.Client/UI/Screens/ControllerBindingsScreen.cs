@@ -22,12 +22,7 @@ public class ControllerBindingsScreen(UIScreen? parent, GameOptions options)
 
     protected override UIElement CreateContent()
     {
-        Panel grid = new();
-        grid.Style.FlexDirection = FlexDirection.Row;
-        grid.Style.FlexWrap = Wrap.Wrap;
-        grid.Style.JustifyContent = Justify.Center;
-        grid.Style.Width = 340;
-        grid.Style.MarginTop = 10;
+        Panel list = CreateVerticalList();
 
         for (int i = 0; i < Options.ControllerBindings.Length; i++)
         {
@@ -37,7 +32,7 @@ public class ControllerBindingsScreen(UIScreen? parent, GameOptions options)
             Panel row = new();
             row.Style.FlexDirection = FlexDirection.Row;
             row.Style.AlignItems = Align.Center;
-            row.Style.Width = 160;
+            row.Style.Width = 310;
             row.Style.SetMargin(2);
 
             Label label = new() { Text = bind.Description };
@@ -46,7 +41,7 @@ public class ControllerBindingsScreen(UIScreen? parent, GameOptions options)
 
             string btnText = _listeningIndex == i ? "> ??? <" : bind.GetButtonName();
             Button btn = new() { Text = btnText };
-            btn.Style.Width = 70;
+            btn.Style.Width = 80;
             btn.OnClick += (e) =>
             {
                 _listeningIndex = index;
@@ -55,10 +50,10 @@ public class ControllerBindingsScreen(UIScreen? parent, GameOptions options)
             };
             row.AddChild(btn);
 
-            grid.AddChild(row);
+            list.AddChild(row);
         }
 
-        return grid;
+        return list;
     }
 
     private void OnButtonPressed(GamepadButton button)

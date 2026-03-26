@@ -28,12 +28,14 @@ public abstract class BaseOptionsScreen(UIScreen? parent, GameOptions options, s
         title.Style.MarginBottom = 12;
         Root.AddChild(title);
 
-        UIElement content = CreateContent();
-        Root.AddChild(content);
+        ScrollView scroll = new();
+        scroll.Style.Width = 340;
+        scroll.Style.FlexGrow = 1;
+        scroll.Style.MarginBottom = 10;
 
-        Panel spacer = new();
-        spacer.Style.FlexGrow = 1;
-        Root.AddChild(spacer);
+        UIElement content = CreateContent();
+        scroll.AddContent(content);
+        Root.AddChild(scroll);
 
         Button btnDone = new() { Text = TranslationStorage.Instance.TranslateKey("gui.done") };
         btnDone.Style.MarginBottom = 20;
@@ -43,22 +45,27 @@ public abstract class BaseOptionsScreen(UIScreen? parent, GameOptions options, s
 
     protected virtual UIElement CreateContent()
     {
-        Panel grid = new();
-        grid.Style.FlexDirection = FlexDirection.Row;
-        grid.Style.FlexWrap = Wrap.Wrap;
-        grid.Style.JustifyContent = Justify.Center;
-        grid.Style.Width = 340;
-        grid.Style.MarginTop = 20;
+        Panel list = CreateVerticalList();
 
         foreach (GameOption option in GetOptions())
         {
             UIElement control = CreateControlForOption(option);
-            control.Style.SetMargin(2);
-            control.Style.Width = 150;
-            grid.AddChild(control);
+            control.Style.MarginTop = 2;
+            control.Style.MarginBottom = 2;
+            control.Style.Width = 310;
+            list.AddChild(control);
         }
 
-        return grid;
+        return list;
+    }
+
+    protected static Panel CreateVerticalList()
+    {
+        Panel list = new();
+        list.Style.FlexDirection = FlexDirection.Column;
+        list.Style.AlignItems = Align.Center;
+        list.Style.Width = 330;
+        return list;
     }
 
     protected abstract IEnumerable<GameOption> GetOptions();

@@ -16,27 +16,25 @@ public class AllControlsScreen : BaseOptionsScreen
 
     protected override UIElement CreateContent()
     {
-        Panel container = new();
-        container.Style.AlignItems = Align.Center;
-        container.Style.MarginTop = 20;
+        Panel list = CreateVerticalList();
 
         Button btnKeyboard = new() { Text = "Keyboard Controls..." };
-        btnKeyboard.Style.Width = 200;
-        btnKeyboard.Style.MarginBottom = 10;
+        btnKeyboard.Style.Width = 310;
+        btnKeyboard.Style.MarginBottom = 4;
         btnKeyboard.OnClick += (e) =>
         {
             Game.displayGuiScreen(new UIScreenAdapter(new ControlsScreen(this, Options)));
         };
-        container.AddChild(btnKeyboard);
+        list.AddChild(btnKeyboard);
 
-        Button btnController = new() { Text = "Controller Controls..." };
-        btnController.Style.Width = 200;
+        Button btnController = new() { Text = "Controller Settings..." };
+        btnController.Style.Width = 310;
         btnController.OnClick += (e) =>
         {
             Game.displayGuiScreen(new UIScreenAdapter(new ControllerControlsScreen(this, Options)));
         };
-        container.AddChild(btnController);
+        list.AddChild(btnController);
 
-        return container;
+        return list;
     }
 }
