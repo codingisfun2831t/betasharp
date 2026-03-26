@@ -1,26 +1,49 @@
-using BetaSharp.Client.UI;
-using BetaSharp.Client.UI.Screens;
+using BetaSharp.Client.Guis;
 using BetaSharp.Client.Network;
+using BetaSharp.Client.UI.Controls;
+using BetaSharp.Client.UI.Layout.Flexbox;
 using BetaSharp.Network;
+using BetaSharp.Network.Packets;
 using BetaSharp.Server.Internal;
-using BetaSharp.Server.Threading;
 using BetaSharp.Worlds.Core.Systems;
 using Microsoft.Extensions.Logging;
 
-namespace BetaSharp.Client.Guis;
+namespace BetaSharp.Client.UI.Screens;
 
-public class GuiLevelLoading(string worldDir, WorldSettings settings) : GuiScreen
+public class LevelLoadingScreen(string worldDir, WorldSettings settings) : UIScreen(BetaSharp.Instance)
 {
-    private readonly ILogger<GuiLevelLoading> _logger = Log.Instance.For<GuiLevelLoading>();
+    private readonly ILogger<LevelLoadingScreen> _logger = Log.Instance.For<LevelLoadingScreen>();
     private readonly string _worldDir = worldDir;
     private readonly WorldSettings _settings = settings;
     private bool _serverStarted;
 
-    public override bool PausesGame=> false;
+    private Label _lblProgress = null!;
 
-    public override void InitGui()
+    public override bool PausesGame => false;
+
+    protected override void Init()
     {
-        _controlList.Clear();
+        Root.AddChild(new Background());
+        Root.Style.AlignItems = Align.Center;
+        Root.Style.JustifyContent = Justify.Center;
+
+        Label lblTitle = new()
+        {
+            Text = "Loading level",
+            TextColor = Color.White,
+            Centered = true
+        };
+        lblTitle.Style.MarginBottom = 10;
+        Root.AddChild(lblTitle);
+
+        _lblProgress = new Label
+        {
+            Text = "Starting server...",
+            TextColor = Color.White,
+            Centered = true
+        };
+        Root.AddChild(_lblProgress);
+
         if (!_serverStarted)
         {
             _serverStarted = true;
@@ -29,8 +52,10 @@ public class GuiLevelLoading(string worldDir, WorldSettings settings) : GuiScree
         }
     }
 
-    public override void UpdateScreen()
+    public override void Update(float partialTicks)
     {
+        base.Update(partialTicks);
+
         if (Game.internalServer != null)
         {
             if (Game.internalServer.stopped)
@@ -38,6 +63,10 @@ public class GuiLevelLoading(string worldDir, WorldSettings settings) : GuiScree
                 Game.displayGuiScreen(new UIScreenAdapter(new ConnectFailedScreen("connect.failed", "disconnect.genericReason", "Internal server stopped unexpectedly")));
                 return;
             }
+
+            string progressMsg = Game.internalServer.progressMessage ?? "Starting server...";
+            int progress = Game.internalServer.progress;
+            _lblProgress.Text = $"{progressMsg} ({progress}%)";
 
             if (Game.internalServer.isReady)
             {
@@ -53,31 +82,15 @@ public class GuiLevelLoading(string worldDir, WorldSettings settings) : GuiScree
                 ClientNetworkHandler clientHandler = new(Game, clientConnection);
                 clientConnection.setNetworkHandler(clientHandler);
                 _logger.LogInformation("[Internal-Client] Sending HandshakePacket");
-                clientHandler.addToSendQueue(new global::BetaSharp.Network.Packets.HandshakePacket(Game.session.username));
+                clientHandler.addToSendQueue(new HandshakePacket(Game.session.username));
 
                 Game.displayGuiScreen(new UIScreenAdapter(new ConnectingScreen(Game, clientHandler)));
             }
         }
     }
 
-    public override void Render(int var1, int var2, float var3)
+    public override void KeyTyped(int key, char character)
     {
-        DrawDefaultBackground();
-        TranslationStorage var4 = TranslationStorage.Instance;
-
-        string title = "Loading level";
-        string progressMsg = "";
-        int progress = 0;
-
-        if (Game.internalServer != null)
-        {
-            progressMsg = Game.internalServer.progressMessage ?? "Starting server...";
-            progress = Game.internalServer.progress;
-        }
-
-        DrawCenteredString(FontRenderer, title, Width / 2, Height / 2 - 50, Color.White);
-        DrawCenteredString(FontRenderer, progressMsg + " (" + progress + "%)", Width / 2, Height / 2 - 10, Color.White);
-
-        base.Render(var1, var2, var3);
+        // Do nothing to prevent escaping
     }
 }

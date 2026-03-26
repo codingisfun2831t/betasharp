@@ -4,7 +4,6 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Entities.FX;
-using BetaSharp.Client.Guis;
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.UI;
@@ -105,7 +104,7 @@ public class ClientNetworkHandler : NetHandler
         };
         _game.changeWorld(_worldClient);
         _game.player.dimensionId = packet.dimensionId;
-        _game.displayGuiScreen(new GuiDownloadTerrain(this));
+        _game.displayGuiScreen(new UIScreenAdapter(new DownloadingTerrainScreen(this)));
         _game.player.id = packet.protocolVersion;
     }
 
@@ -625,7 +624,7 @@ public class ClientNetworkHandler : NetHandler
             };
             _game.changeWorld(_worldClient);
             _game.player.dimensionId = packet.dimensionId;
-            _game.displayGuiScreen(new GuiDownloadTerrain(this));
+            _game.displayGuiScreen(new UIScreenAdapter(new DownloadingTerrainScreen(this)));
         }
 
         _game.respawn(true, packet.dimensionId);

@@ -1691,7 +1691,7 @@ public partial class BetaSharp
     public void startWorld(string worldName, string mainMenuText, WorldSettings settings)
     {
         changeWorld(null);
-        displayGuiScreen(new GuiLevelLoading(worldName, settings));
+        displayGuiScreen(new UIScreenAdapter(new LevelLoadingScreen(worldName, settings)));
     }
 
     public void changeWorld(World? newWorld, string loadingText = "", EntityPlayer targetEntity = null)
