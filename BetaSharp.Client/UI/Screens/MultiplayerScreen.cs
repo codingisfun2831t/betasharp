@@ -5,7 +5,7 @@ using BetaSharp.NBT;
 
 namespace BetaSharp.Client.UI.Screens;
 
-public class MultiplayerScreen : UIScreen
+public class MultiplayerScreen(BetaSharp game) : UIScreen(game)
 {
     private readonly List<ServerData> _serverList = [];
     private ScrollView _scrollView = null!;
@@ -15,10 +15,6 @@ public class MultiplayerScreen : UIScreen
     private Button _btnJoin = null!;
     private Button _btnEdit = null!;
     private Button _btnDelete = null!;
-
-    public MultiplayerScreen(BetaSharp game) : base(game)
-    {
-    }
 
     protected override void Init()
     {

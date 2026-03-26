@@ -4,12 +4,8 @@ using BetaSharp.Client.UI.Layout.Flexbox;
 
 namespace BetaSharp.Client.UI.Screens;
 
-public class MainMenuScreen : UIScreen
+public class MainMenuScreen(BetaSharp game) : UIScreen(game)
 {
-    public MainMenuScreen(BetaSharp game) : base(game)
-    {
-    }
-
     protected override void Init()
     {
         Root.Style.AlignItems = Align.Center;

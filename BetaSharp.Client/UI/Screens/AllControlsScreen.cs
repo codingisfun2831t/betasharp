@@ -1,12 +1,11 @@
 using BetaSharp.Client.Options;
 using BetaSharp.Client.UI.Controls;
-using BetaSharp.Client.UI.Layout.Flexbox;
 
 namespace BetaSharp.Client.UI.Screens;
 
 public class AllControlsScreen : BaseOptionsScreen
 {
-    public AllControlsScreen(UIScreen? parent, GameOptions options) 
+    public AllControlsScreen(UIScreen? parent, GameOptions options)
         : base(parent, options, "options.controls")
     {
         TitleText = "Controls";

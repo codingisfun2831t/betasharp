@@ -84,7 +84,6 @@ public class CreateFlatWorldScreen(BetaSharp game, CreateWorldScreen parent, str
         _listItems.Clear();
         _selectedIndex = -1;
 
-        // Note: Legacy GuiSlotFlatLayers draws layers in reverse order
         for (int i = 0; i < _generatorInfo.FlatLayers.Count; i++)
         {
             int index = i;

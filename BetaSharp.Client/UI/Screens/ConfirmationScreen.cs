@@ -4,25 +4,8 @@ using BetaSharp.Client.UI.Layout.Flexbox;
 
 namespace BetaSharp.Client.UI.Screens;
 
-public class ConfirmationScreen : UIScreen
+public class ConfirmationScreen(BetaSharp game, UIScreen parent, string title, string message, string confirmText, string cancelText, Action<bool> callback) : UIScreen(game)
 {
-    private readonly UIScreen _parent;
-    private readonly string _title;
-    private readonly string _message;
-    private readonly string _confirmText;
-    private readonly string _cancelText;
-    private readonly Action<bool> _callback;
-
-    public ConfirmationScreen(BetaSharp game, UIScreen parent, string title, string message, string confirmText, string cancelText, Action<bool> callback) : base(game)
-    {
-        _parent = parent;
-        _title = title;
-        _message = message;
-        _confirmText = confirmText;
-        _cancelText = cancelText;
-        _callback = callback;
-    }
-
     protected override void Init()
     {
         Root.AddChild(new Background());
@@ -30,33 +13,33 @@ public class ConfirmationScreen : UIScreen
         Root.Style.JustifyContent = Justify.Center;
         Root.Style.SetPadding(20);
 
-        Label lblTitle = new() { Text = _title, TextColor = Color.White };
+        Label lblTitle = new() { Text = title, TextColor = Color.White };
         lblTitle.Style.MarginBottom = 10;
         Root.AddChild(lblTitle);
 
-        Label lblMsg = new() { Text = _message, TextColor = Color.GrayA0 };
+        Label lblMsg = new() { Text = message, TextColor = Color.GrayA0 };
         lblMsg.Style.MarginBottom = 20;
         Root.AddChild(lblMsg);
 
         Panel buttonPanel = new();
         buttonPanel.Style.FlexDirection = FlexDirection.Row;
 
-        Button btnConfirm = new() { Text = _confirmText };
+        Button btnConfirm = new() { Text = confirmText };
         btnConfirm.Style.Width = 100;
         btnConfirm.Style.SetMargin(0, 4, 0, 0);
         btnConfirm.OnClick += (e) =>
         {
-            _callback(true);
-            Game.displayGuiScreen(new UIScreenAdapter(_parent));
+            callback(true);
+            Game.displayGuiScreen(new UIScreenAdapter(parent));
         };
         buttonPanel.AddChild(btnConfirm);
 
-        Button btnCancel = new() { Text = _cancelText };
+        Button btnCancel = new() { Text = cancelText };
         btnCancel.Style.Width = 100;
         btnCancel.OnClick += (e) =>
         {
-            _callback(false);
-            Game.displayGuiScreen(new UIScreenAdapter(_parent));
+            callback(false);
+            Game.displayGuiScreen(new UIScreenAdapter(parent));
         };
         buttonPanel.AddChild(btnCancel);
 

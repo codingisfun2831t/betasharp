@@ -4,17 +4,9 @@ using BetaSharp.Client.UI.Layout.Flexbox;
 
 namespace BetaSharp.Client.UI.Screens;
 
-public class DirectConnectScreen : UIScreen
+public class DirectConnectScreen(BetaSharp game, UIScreen parent, ServerData serverData) : UIScreen(game)
 {
-    private readonly UIScreen _parent;
-    private readonly ServerData _serverData;
     private TextField _txfAddress = null!;
-
-    public DirectConnectScreen(BetaSharp game, UIScreen parent, ServerData serverData) : base(game)
-    {
-        _parent = parent;
-        _serverData = serverData;
-    }
 
     protected override void Init()
     {
@@ -45,7 +37,7 @@ public class DirectConnectScreen : UIScreen
         btnJoin.Style.SetMargin(0, 4, 0, 0);
         btnJoin.OnClick += (e) =>
         {
-            _serverData.Ip = _txfAddress.Text;
+            serverData.Ip = _txfAddress.Text;
             Game.options.LastServer = _txfAddress.Text;
             Game.options.SaveOptions();
             ConnectToServer(_txfAddress.Text);
@@ -54,7 +46,7 @@ public class DirectConnectScreen : UIScreen
 
         Button btnCancel = new() { Text = "Cancel" };
         btnCancel.Style.Width = 100;
-        btnCancel.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(_parent));
+        btnCancel.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(parent));
         buttonPanel.AddChild(btnCancel);
 
         Root.AddChild(buttonPanel);

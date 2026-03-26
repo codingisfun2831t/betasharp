@@ -7,7 +7,7 @@ namespace BetaSharp.Client.UI.Screens;
 
 public class MainMenuSplash : UIElement
 {
-    private static readonly ILogger<MainMenuSplash> _logger = Log.Instance.For<MainMenuSplash>();
+    private static readonly ILogger<MainMenuSplash> s_logger = Log.Instance.For<MainMenuSplash>();
     private static readonly JavaRandom s_rand = new();
 
     private string _splashText = "missingno";
@@ -52,7 +52,7 @@ public class MainMenuSplash : UIElement
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error loading splash text");
+            s_logger.LogError(ex, "Error loading splash text");
         }
     }
 

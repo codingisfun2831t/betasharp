@@ -1,4 +1,3 @@
-using BetaSharp.Client.Input;
 using BetaSharp.Client.Options;
 using BetaSharp.Client.UI.Controls;
 using BetaSharp.Client.UI.Layout.Flexbox;
