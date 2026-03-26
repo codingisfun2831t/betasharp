@@ -9,6 +9,7 @@ public class Label : UIElement
     public Color TextColor { get; set; } = Color.White;
     public bool Centered { get; set; } = false;
     public float Scale { get; set; } = 1.0f;
+    public bool HasShadow { get; set; } = true;
 
     public override void Measure(float availableWidth, float availableHeight)
     {
@@ -20,11 +21,11 @@ public class Label : UIElement
     {
         if (Centered)
         {
-            renderer.DrawCenteredText(Text, ComputedWidth / 2, ComputedHeight / 2 - 4 * Scale, TextColor, 0, Scale);
+            renderer.DrawCenteredText(Text, ComputedWidth / 2, ComputedHeight / 2 - 4 * Scale, TextColor, 0, Scale, HasShadow);
         }
         else
         {
-            renderer.DrawText(Text, 0, 0, TextColor, Scale);
+            renderer.DrawText(Text, 0, 0, TextColor, Scale, HasShadow);
         }
 
         base.Render(renderer);

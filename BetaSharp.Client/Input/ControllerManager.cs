@@ -1,6 +1,8 @@
 using BetaSharp.Client.Guis;
 using BetaSharp.Client.Options;
 using Silk.NET.GLFW;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 
 namespace BetaSharp.Client.Input;
 
@@ -139,13 +141,13 @@ public static class ControllerManager
         // Inventory
         if (inventoryHeld && !s_wasInventoryDown)
         {
-            s_game.displayGuiScreen(new GuiInventory(s_game.player));
+            s_game.displayGuiScreen(new UIScreenAdapter(new InventoryScreen(s_game.player)));
         }
 
         // Crafting
         if (craftingHeld && !s_wasCraftingDown)
         {
-            s_game.displayGuiScreen(new GuiInventory(s_game.player));
+            s_game.displayGuiScreen(new UIScreenAdapter(new InventoryScreen(s_game.player)));
         }
 
         // Drop

@@ -8,6 +8,8 @@ using BetaSharp.NBT;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core.Systems;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 
 namespace BetaSharp.Client.Entities;
 
@@ -139,22 +141,22 @@ public class ClientPlayerEntity : EntityPlayer
 
     public override void openChestScreen(IInventory inventory)
     {
-        Game.displayGuiScreen(new GuiChest(base.inventory, inventory));
+        Game.displayGuiScreen(new UIScreenAdapter(new ChestScreen(base.inventory, inventory)));
     }
 
     public override void openCraftingScreen(int x, int y, int z)
     {
-        Game.displayGuiScreen(new GuiCrafting(inventory, world, x, y, z));
+        Game.displayGuiScreen(new UIScreenAdapter(new CraftingScreen(inventory, world, x, y, z)));
     }
 
     public override void openFurnaceScreen(BlockEntityFurnace furnace)
     {
-        Game.displayGuiScreen(new GuiFurnace(inventory, furnace));
+        Game.displayGuiScreen(new UIScreenAdapter(new FurnaceScreen(inventory, furnace)));
     }
 
     public override void openDispenserScreen(BlockEntityDispenser dispenser)
     {
-        Game.displayGuiScreen(new GuiDispenser(inventory, dispenser));
+        Game.displayGuiScreen(new UIScreenAdapter(new DispenserScreen(inventory, dispenser)));
     }
 
     public override void sendPickup(Entity entity, int count)

@@ -13,6 +13,8 @@ public abstract class UIScreen
     private UIElement? _hoveredElement;
     public UIElement? FocusedElement { get; set; }
     public UIElement? DraggingElement { get; set; }
+    public float MouseX { get; protected set; }
+    public float MouseY { get; protected set; }
     public virtual bool PausesGame => true;
 
     private bool _isInitialized = false;
@@ -56,6 +58,8 @@ public abstract class UIScreen
 
         float scaledMouseX = mouseX;
         float scaledMouseY = mouseY;
+        MouseX = scaledMouseX;
+        MouseY = scaledMouseY;
 
         UpdateHovers(scaledMouseX, scaledMouseY);
 

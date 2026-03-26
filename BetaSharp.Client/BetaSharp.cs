@@ -1615,7 +1615,7 @@ public partial class BetaSharp
 
                         if (Keyboard.getEventKey() == options.KeyBindInventory.keyCode)
                         {
-                            displayGuiScreen(new GuiInventory(player));
+                            displayGuiScreen(new UIScreenAdapter(new InventoryScreen(player)));
                         }
 
                         if (Keyboard.getEventKey() == options.KeyBindDrop.keyCode)

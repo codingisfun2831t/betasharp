@@ -3,8 +3,13 @@ using BetaSharp.Client.Rendering;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Core.Textures;
+using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Rendering.Items;
+using BetaSharp.Entities;
+using BetaSharp.Items;
 using Silk.NET.Maths;
+using BetaSharp.Blocks;
+using BetaSharp.Client.Rendering.Blocks;
 
 namespace BetaSharp.Client.UI.Rendering;
 
@@ -12,6 +17,7 @@ public class UIRenderer
 {
     private readonly TextRenderer _textRenderer;
     public TextureManager TextureManager { get; }
+    private readonly ItemRenderer _itemRenderer = new();
 
     private float _translateX = 0;
     private float _translateY = 0;
@@ -25,6 +31,10 @@ public class UIRenderer
 
     public void Begin()
     {
+        GLManager.GL.Disable(GLEnum.Lighting);
+        GLManager.GL.Disable(GLEnum.DepthTest);
+        GLManager.GL.Disable(GLEnum.CullFace);
+        GLManager.GL.Color4(1.0F, 1.0F, 1.0F, 1.0F);
         GLManager.GL.Enable(GLEnum.Blend);
         GLManager.GL.BlendFunc(GLEnum.SrcAlpha, GLEnum.OneMinusSrcAlpha);
         GLManager.GL.PushMatrix();
@@ -37,6 +47,11 @@ public class UIRenderer
     public void End()
     {
         GLManager.GL.PopMatrix();
+    }
+
+    public void ClearDepth()
+    {
+        GLManager.GL.Clear((Silk.NET.OpenGL.ClearBufferMask)GLEnum.DepthBufferBit);
     }
 
     public void PushTranslate(float x, float y)
@@ -105,26 +120,47 @@ public class UIRenderer
         Gui.DrawGradientRect(ix1, iy1, ix2, iy2, topColor, bottomColor);
     }
 
-    public void DrawText(string text, float x, float y, Color color, float scale = 1.0f)
+    public void DrawText(string text, float x, float y, Color color, float scale = 1.0f, bool shadow = true)
     {
         if (scale == 1.0f)
         {
-            _textRenderer.DrawStringWithShadow(text, (int)MathF.Floor(x + _translateX), (int)MathF.Floor(y + _translateY), color);
+            if (shadow)
+            {
+                _textRenderer.DrawStringWithShadow(text, (int)MathF.Floor(x + _translateX), (int)MathF.Floor(y + _translateY), color);
+            }
+            else
+            {
+                _textRenderer.DrawString(text, (int)MathF.Floor(x + _translateX), (int)MathF.Floor(y + _translateY), color);
+            }
             return;
         }
 
         GLManager.GL.PushMatrix();
         GLManager.GL.Translate(x + _translateX, y + _translateY, 0);
         GLManager.GL.Scale(scale, scale, 1);
-        _textRenderer.DrawStringWithShadow(text, 0, 0, color);
+        if (shadow)
+        {
+            _textRenderer.DrawStringWithShadow(text, 0, 0, color);
+        }
+        else
+        {
+            _textRenderer.DrawString(text, 0, 0, color);
+        }
         GLManager.GL.PopMatrix();
     }
 
-    public void DrawCenteredText(string text, float x, float y, Color color, float rotation = 0, float scale = 1.0f)
+    public void DrawCenteredText(string text, float x, float y, Color color, float rotation = 0, float scale = 1.0f, bool shadow = true)
     {
         if (rotation == 0 && scale == 1.0f)
         {
-            Gui.DrawCenteredString(_textRenderer, text, (int)(x + _translateX), (int)(y + _translateY), color);
+            if (shadow)
+            {
+                Gui.DrawCenteredString(_textRenderer, text, (int)(x + _translateX), (int)(y + _translateY), color);
+            }
+            else
+            {
+                _textRenderer.DrawString(text, (int)(x + _translateX), (int)(y + _translateY), color, SixLabors.Fonts.HorizontalAlignment.Center);
+            }
             return;
         }
 
@@ -133,7 +169,14 @@ public class UIRenderer
         if (rotation != 0) GLManager.GL.Rotate(rotation, 0, 0, 1);
         if (scale != 1.0f) GLManager.GL.Scale(scale, scale, 1);
 
-        Gui.DrawCenteredString(_textRenderer, text, 0, 0, color);
+        if (shadow)
+        {
+            Gui.DrawCenteredString(_textRenderer, text, 0, 0, color);
+        }
+        else
+        {
+            _textRenderer.DrawString(text, 0, 0, color, SixLabors.Fonts.HorizontalAlignment.Center);
+        }
 
         GLManager.GL.PopMatrix();
     }
@@ -196,5 +239,95 @@ public class UIRenderer
     public void DrawItemIntoGui(ItemRenderer itemRenderer, int itemId, int itemMeta, int textureId, float x, float y)
     {
         itemRenderer.drawItemIntoGui(_textRenderer, TextureManager, itemId, itemMeta, textureId, (int)(x + _translateX), (int)(y + _translateY));
+    }
+
+    public void DrawItem(ItemStack stack, float x, float y)
+    {
+        if (stack == null) return;
+
+        bool isBlock = stack.itemId < 256 && BlockRenderer.IsSideLit(Block.Blocks[stack.itemId].getRenderType());
+
+        if (isBlock)
+        {
+            GLManager.GL.PushMatrix();
+            GLManager.GL.Translate(0, 0, 32.0f);
+            
+            GLManager.GL.Disable(GLEnum.CullFace);
+            GLManager.GL.Enable(GLEnum.RescaleNormal);
+            GLManager.GL.Enable(GLEnum.DepthTest);
+            
+            Lighting.turnOn();
+            _itemRenderer.renderItemIntoGUI(_textRenderer, TextureManager, stack, (int)(x + _translateX), (int)(y + _translateY));
+            Lighting.turnOff();
+
+            GLManager.GL.Disable(GLEnum.CullFace);
+            GLManager.GL.Disable(GLEnum.DepthTest);
+            GLManager.GL.Disable(GLEnum.RescaleNormal);
+            GLManager.GL.PopMatrix();
+        }
+        else
+        {
+            GLManager.GL.Disable(GLEnum.Lighting);
+            GLManager.GL.Disable(GLEnum.DepthTest);
+            _itemRenderer.renderItemIntoGUI(_textRenderer, TextureManager, stack, (int)(x + _translateX), (int)(y + _translateY));
+        }
+    }
+
+    public void DrawItemOverlay(ItemStack stack, float x, float y)
+    {
+        if (stack == null) return;
+
+        GLManager.GL.Disable(GLEnum.Lighting);
+        GLManager.GL.Disable(GLEnum.DepthTest);
+        _itemRenderer.renderItemOverlayIntoGUI(_textRenderer, TextureManager, stack, (int)(x + _translateX), (int)(y + _translateY));
+    }
+
+    public void DrawEntity(Entity entity, float x, float y, float scale, float mouseX, float mouseY)
+    {
+        GLManager.GL.Enable(GLEnum.RescaleNormal);
+        GLManager.GL.Enable(GLEnum.ColorMaterial);
+        GLManager.GL.PushMatrix();
+        GLManager.GL.Translate(x + _translateX, y + _translateY, 50.0F);
+
+        GLManager.GL.Scale(-scale, scale, scale);
+        GLManager.GL.Rotate(180.0F, 0.0F, 0.0F, 1.0F);
+        GLManager.GL.Disable(GLEnum.CullFace);
+
+        float bodyYaw = entity is EntityLiving el ? el.bodyYaw : entity.yaw;
+        float headYaw = entity.yaw;
+        float headPitch = entity.pitch;
+        float lookX = x + _translateX - mouseX;
+        float lookY = y + _translateY - 50 - mouseY;
+
+        GLManager.GL.Rotate(135.0F, 0.0F, 1.0F, 0.0F);
+        Lighting.turnOn();
+        GLManager.GL.Rotate(-135.0F, 0.0F, 1.0F, 0.0F);
+        GLManager.GL.Rotate(-(float)Math.Atan(lookY / 40.0F) * 20.0F, 1.0F, 0.0F, 0.0F);
+
+        if (entity is EntityLiving el2)
+        {
+            el2.bodyYaw = (float)Math.Atan(lookX / 40.0F) * 20.0F;
+        }
+        entity.yaw = (float)Math.Atan(lookX / 40.0F) * 40.0F;
+        entity.pitch = -(float)Math.Atan(lookY / 40.0F) * 20.0F;
+        entity.minBrightness = 1.0F;
+
+        GLManager.GL.Translate(0.0F, entity.standingEyeHeight, 0.0F);
+        EntityRenderDispatcher.instance.playerViewY = 180.0F;
+        EntityRenderDispatcher.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
+
+        entity.minBrightness = 0.0F;
+        if (entity is EntityLiving el3)
+        {
+            el3.bodyYaw = bodyYaw;
+        }
+        entity.yaw = headYaw;
+        entity.pitch = headPitch;
+
+        GLManager.GL.PopMatrix();
+        Lighting.turnOff();
+        GLManager.GL.Disable(GLEnum.CullFace);
+        GLManager.GL.Disable(GLEnum.RescaleNormal);
+        GLManager.GL.Disable(GLEnum.ColorMaterial);
     }
 }
