@@ -13,7 +13,7 @@ public class ChestScreen : ContainerScreen
     private readonly IInventory _lowerInventory;
     private readonly int _inventoryRows;
 
-    public ChestScreen(IInventory upperInventory, IInventory lowerInventory) 
+    public ChestScreen(IInventory upperInventory, IInventory lowerInventory)
         : base(new GenericContainerScreenHandler(upperInventory, lowerInventory))
     {
         _upperInventory = upperInventory;
@@ -26,30 +26,53 @@ public class ChestScreen : ContainerScreen
     {
         base.Init();
 
-        // Background Image
-        var background = new Image 
-        { 
+        // Background Image split into two parts to handle single/double chests
+        int topHeight = _inventoryRows * 18 + 17;
+        var topBg = new Image
+        {
             Texture = Renderer.TextureManager.GetTextureId("/gui/container.png"),
             U = 0,
             V = 0,
             UWidth = 176,
-            VHeight = _ySize
+            VHeight = topHeight
         };
-        background.Style.Width = _xSize;
-        background.Style.Height = _ySize;
-        background.Style.Position = PositionType.Absolute;
-        _containerPanel.AddChild(background);
+        topBg.Style.Width = _xSize;
+        topBg.Style.Height = topHeight;
+        topBg.Style.Position = PositionType.Absolute;
+        _containerPanel.AddChild(topBg);
+
+        var bottomBg = new Image
+        {
+            Texture = Renderer.TextureManager.GetTextureId("/gui/container.png"),
+            U = 0,
+            V = 126,
+            UWidth = 176,
+            VHeight = 96
+        };
+        bottomBg.Style.Width = _xSize;
+        bottomBg.Style.Height = 96;
+        bottomBg.Style.Position = PositionType.Absolute;
+        bottomBg.Style.Top = topHeight;
+        _containerPanel.AddChild(bottomBg);
 
         // Labels
-        var lblUpper = new Label { Text = _lowerInventory.getName(), HasShadow = false };
-        lblUpper.TextColor = Color.Gray40;
+        var lblUpper = new Label
+        {
+            Text = _lowerInventory.getName(),
+            HasShadow = false,
+            TextColor = Color.Gray40
+        };
         lblUpper.Style.Position = PositionType.Absolute;
         lblUpper.Style.Left = 8;
         lblUpper.Style.Top = 6;
         _containerPanel.AddChild(lblUpper);
 
-        var lblLower = new Label { Text = _upperInventory.getName(), HasShadow = false };
-        lblLower.TextColor = Color.Gray40;
+        var lblLower = new Label
+        {
+            Text = _upperInventory.getName(),
+            HasShadow = false,
+            TextColor = Color.Gray40
+        };
         lblLower.Style.Position = PositionType.Absolute;
         lblLower.Style.Left = 8;
         lblLower.Style.Top = _ySize - 96 + 2;
