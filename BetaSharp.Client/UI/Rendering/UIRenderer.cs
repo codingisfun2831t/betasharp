@@ -251,11 +251,11 @@ public class UIRenderer
         {
             GLManager.GL.PushMatrix();
             GLManager.GL.Translate(0, 0, 32.0f);
-            
+
             GLManager.GL.Disable(GLEnum.CullFace);
             GLManager.GL.Enable(GLEnum.RescaleNormal);
             GLManager.GL.Enable(GLEnum.DepthTest);
-            
+
             Lighting.turnOn();
             _itemRenderer.renderItemIntoGUI(_textRenderer, TextureManager, stack, (int)(x + _translateX), (int)(y + _translateY));
             Lighting.turnOff();
@@ -286,6 +286,7 @@ public class UIRenderer
     {
         GLManager.GL.Enable(GLEnum.RescaleNormal);
         GLManager.GL.Enable(GLEnum.ColorMaterial);
+        GLManager.GL.Enable(GLEnum.DepthTest);
         GLManager.GL.PushMatrix();
         GLManager.GL.Translate(x + _translateX, y + _translateY, 50.0F);
 
@@ -327,6 +328,7 @@ public class UIRenderer
         GLManager.GL.PopMatrix();
         Lighting.turnOff();
         GLManager.GL.Disable(GLEnum.CullFace);
+        GLManager.GL.Disable(GLEnum.DepthTest);
         GLManager.GL.Disable(GLEnum.RescaleNormal);
         GLManager.GL.Disable(GLEnum.ColorMaterial);
     }
