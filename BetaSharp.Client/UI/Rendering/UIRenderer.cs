@@ -141,6 +141,11 @@ public class UIRenderer
     public void DrawTexture(TextureHandle texture, float x, float y, float width, float height)
     {
         TextureManager.BindTexture(texture);
+        DrawBoundTexture(x, y, width, height);
+    }
+
+    public void DrawBoundTexture(float x, float y, float width, float height)
+    {
         Tessellator tess = Tessellator.instance;
         float finalX = x + _translateX;
         float finalY = y + _translateY;

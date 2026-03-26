@@ -50,7 +50,7 @@ public class MainMenuScreen(BetaSharp game) : UIScreen(game)
         Root.AddChild(btnMultiplayer);
 
         Button btnMods = new() { Text = translator.TranslateKey("menu.mods") };
-        btnMods.OnClick += (e) => Game.displayGuiScreen(new GuiTexturePacks(new UIScreenAdapter(this)));
+        btnMods.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new TexturePacksScreen(this)));
         btnMods.Style.MarginBottom = 4;
         Root.AddChild(btnMods);
 
