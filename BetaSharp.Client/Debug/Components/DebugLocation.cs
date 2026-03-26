@@ -12,11 +12,11 @@ public class DebugLocation : DebugComponent
     private static readonly string[] s_cardinalDirections = ["south", "west", "north", "east"];
     private static readonly string[] s_towards = ["positive Z", "negative X", "negative Z", "positive X"];
 
-    public bool ShowXYZ = true;
-    public bool ShowBlockXYZ = true;
-    public bool ShowFacing = true;
-    public bool ShowBiome = true;
-    public bool ShowLight = true;
+    public bool ShowXYZ { get; set; } = true;
+    public bool ShowBlockXYZ { get; set; } = true;
+    public bool ShowFacing { get; set; } = true;
+    public bool ShowBiome { get; set; } = true;
+    public bool ShowLight { get; set; } = true;
 
     public DebugLocation() { }
 
@@ -109,7 +109,8 @@ public class DebugLocation : DebugComponent
         };
     }
 
-    public override void writeNBT(NBTTagCompound nbt) {
+    public override void writeNBT(NBTTagCompound nbt)
+    {
         nbt.SetBoolean("ShowXYZ", ShowXYZ);
         nbt.SetBoolean("ShowBlockXYZ", ShowBlockXYZ);
         nbt.SetBoolean("ShowFacing", ShowFacing);
