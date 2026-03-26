@@ -36,7 +36,7 @@ public abstract class UIScreen
     protected abstract void Init();
     public virtual void Uninit() { }
 
-    public void Update(float partialTicks)
+    public virtual void Update(float partialTicks)
     {
         Root.Update(partialTicks);
     }
@@ -96,9 +96,9 @@ public abstract class UIScreen
 
             if (FocusedElement != target)
             {
-                FocusedElement?.IsFocused = false;
+                if (FocusedElement != null) FocusedElement.IsFocused = false;
                 FocusedElement = target;
-                FocusedElement?.IsFocused = true;
+                if (FocusedElement != null) FocusedElement.IsFocused = true;
             }
 
             if (target != null)
@@ -170,6 +170,21 @@ public abstract class UIScreen
 
                 FocusedElement.OnKeyDown?.Invoke(evt);
             }
+
+            KeyTyped(Keyboard.getEventKey(), Keyboard.getEventCharacter());
         }
+    }
+
+    public virtual void KeyTyped(int key, char character)
+    {
+        if (key == Keyboard.KEY_ESCAPE || key == Keyboard.KEY_NONE)
+        {
+            Uninit();
+            Game.displayGuiScreen(null); // Default close behavior
+        }
+    }
+
+    public virtual void HandleControllerInput()
+    {
     }
 }

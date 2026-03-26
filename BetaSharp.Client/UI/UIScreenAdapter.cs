@@ -45,4 +45,9 @@ public class UIScreenAdapter : GuiScreen
     {
         Screen.HandleKeyboardInput();
     }
+
+    public override void HandleControllerInput()
+    {
+        Screen.HandleControllerInput();
+    }
 }
