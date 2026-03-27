@@ -42,7 +42,7 @@ public class IngameMenuScreen(BetaSharp game) : UIScreen(game)
 
         Button btnStats = new() { Text = StatCollector.TranslateToLocal("gui.stats") };
         btnStats.Style.Width = 98;
-        btnStats.OnClick += (e) => Game.displayGuiScreen(new GuiStats(new UIScreenAdapter(this), Game.statFileWriter));
+        btnStats.OnClick += (e) => Game.displayGuiScreen(new UIScreenAdapter(new StatsScreen(this, Game.statFileWriter)));
 
         rowStats.AddChild(btnAchievements);
         rowStats.AddChild(btnStats);

@@ -40,7 +40,6 @@ public class Gui
         tess.draw();
 
         GLManager.GL.Enable(GLEnum.Texture2D);
-        GLManager.GL.Disable(GLEnum.Blend);
     }
 
     internal static void DrawGradientRect(int right, int bottom, int left, int top, Color topColor, Color bottomColor)
@@ -62,7 +61,6 @@ public class Gui
         tess.draw();
 
         GLManager.GL.ShadeModel(GLEnum.Flat);
-        GLManager.GL.Disable(GLEnum.Blend);
         GLManager.GL.Enable(GLEnum.AlphaTest);
         GLManager.GL.Enable(GLEnum.Texture2D);
     }
