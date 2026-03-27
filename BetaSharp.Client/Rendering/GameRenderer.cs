@@ -321,10 +321,6 @@ public class GameRenderer
                 GLManager.GL.Clear(ClearBufferMask.DepthBufferBit);
                 setupHudRender();
                 _client.currentScreen.Render(scaledMouseX, scaledMouseY, tickDelta);
-                if (_client.currentScreen != null && _client.currentScreen.ParticlesGui != null)
-                {
-                    _client.currentScreen.ParticlesGui.render(tickDelta);
-                }
 
                 if (_client.isControllerMode)
                 {

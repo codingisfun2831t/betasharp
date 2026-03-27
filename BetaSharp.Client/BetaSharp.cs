@@ -1371,11 +1371,7 @@ public partial class BetaSharp
         if (currentScreen != null)
         {
             currentScreen.HandleInput();
-            if (currentScreen != null)
-            {
-                currentScreen.ParticlesGui.updateParticles();
-                currentScreen.UpdateScreen();
-            }
+            currentScreen?.UpdateScreen();
         }
 
         if (currentScreen == null || currentScreen.AllowUserInput)
@@ -1396,10 +1392,7 @@ public partial class BetaSharp
             }
 
             world.SetDifficulty(options.Difficulty);
-            if (internalServer != null)
-            {
-                internalServer.SetDifficulty(options.Difficulty);
-            }
+            internalServer?.SetDifficulty(options.Difficulty);
 
             if (world.IsRemote)
             {
