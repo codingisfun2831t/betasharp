@@ -11,7 +11,20 @@ public abstract class UIScreen
     public UIRenderer Renderer { get; private set; }
 
     private UIElement? _hoveredElement;
-    public UIElement? FocusedElement { get; set; }
+    private UIElement? _focusedElement;
+    public UIElement? FocusedElement
+    {
+        get => _focusedElement;
+        set
+        {
+            if (_focusedElement != value)
+            {
+                if (_focusedElement != null) _focusedElement.IsFocused = false;
+                _focusedElement = value;
+                if (_focusedElement != null) _focusedElement.IsFocused = true;
+            }
+        }
+    }
     public UIElement? DraggingElement { get; set; }
     public float MouseX { get; protected set; }
     public float MouseY { get; protected set; }
@@ -102,12 +115,7 @@ public abstract class UIScreen
             MouseButton button = Enum.IsDefined(typeof(MouseButton), rawButton) ? (MouseButton)rawButton : MouseButton.Unknown;
             UIElement? target = Root.HitTest(scaledX, scaledY);
 
-            if (FocusedElement != target)
-            {
-                if (FocusedElement != null) FocusedElement.IsFocused = false;
-                FocusedElement = target;
-                if (FocusedElement != null) FocusedElement.IsFocused = true;
-            }
+            FocusedElement = target;
 
             if (target != null && target.Enabled)
             {

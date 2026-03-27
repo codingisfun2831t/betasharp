@@ -1626,12 +1626,12 @@ public partial class BetaSharp
 
                         if (Keyboard.getEventKey() == options.KeyBindChat.keyCode)
                         {
-                            displayGuiScreen(new GuiChat());
+                            displayGuiScreen(new UIScreenAdapter(new ChatScreen(this)));
                         }
 
                         if (Keyboard.getEventKey() == options.KeyBindCommand.keyCode)
                         {
-                            displayGuiScreen(new GuiChat("/"));
+                            displayGuiScreen(new UIScreenAdapter(new ChatScreen(this, "/")));
                         }
                     }
 
