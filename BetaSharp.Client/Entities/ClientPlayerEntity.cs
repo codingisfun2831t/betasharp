@@ -2,14 +2,14 @@ using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Entities.FX;
 using BetaSharp.Client.Guis;
 using BetaSharp.Client.Input;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Screens;
 using BetaSharp.Entities;
 using BetaSharp.Inventorys;
 using BetaSharp.NBT;
 using BetaSharp.Stats;
 using BetaSharp.Util.Maths;
 using BetaSharp.Worlds.Core.Systems;
-using BetaSharp.Client.UI;
-using BetaSharp.Client.UI.Screens;
 
 namespace BetaSharp.Client.Entities;
 
@@ -136,7 +136,7 @@ public class ClientPlayerEntity : EntityPlayer
 
     public override void openEditSignScreen(BlockEntitySign sign)
     {
-        Game.displayGuiScreen(new GuiEditSign(sign));
+        Game.displayGuiScreen(new UIScreenAdapter(new SignEditScreen(Game, sign)));
     }
 
     public override void openChestScreen(IInventory inventory)

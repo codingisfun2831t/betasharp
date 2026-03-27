@@ -321,7 +321,7 @@ public class GuiScreen : Gui
             }
         }
 
-        if (currentButton is GuiSlider) return false;
+        //if (currentButton is GuiSlider) return false;
 
         float refX, refY;
         if (currentButton != null)

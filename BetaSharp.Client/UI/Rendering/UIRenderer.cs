@@ -1,5 +1,9 @@
+using BetaSharp.Blocks;
+using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Guis;
 using BetaSharp.Client.Rendering;
+using BetaSharp.Client.Rendering.Blocks;
+using BetaSharp.Client.Rendering.Blocks.Entities;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.OpenGL;
 using BetaSharp.Client.Rendering.Core.Textures;
@@ -8,8 +12,6 @@ using BetaSharp.Client.Rendering.Items;
 using BetaSharp.Entities;
 using BetaSharp.Items;
 using Silk.NET.Maths;
-using BetaSharp.Blocks;
-using BetaSharp.Client.Rendering.Blocks;
 
 namespace BetaSharp.Client.UI.Rendering;
 
@@ -331,5 +333,40 @@ public class UIRenderer
         GLManager.GL.Disable(GLEnum.DepthTest);
         GLManager.GL.Disable(GLEnum.RescaleNormal);
         GLManager.GL.Disable(GLEnum.ColorMaterial);
+    }
+
+    public void DrawSign(BlockEntitySign sign, float x, float y, float scale)
+    {
+        GLManager.GL.Enable(GLEnum.RescaleNormal);
+        GLManager.GL.Enable(GLEnum.DepthTest);
+        GLManager.GL.PushMatrix();
+        GLManager.GL.Translate(x + _translateX, y + _translateY, 50.0F);
+
+        GLManager.GL.Scale(-scale, -scale, -scale);
+        GLManager.GL.Rotate(180.0F, 0.0F, 1.0F, 0.0F);
+
+        Block signBlock = sign.getBlock();
+        if (signBlock == Block.Sign)
+        {
+            float rotation = sign.getPushedBlockData() * 360 / 16.0F;
+            GLManager.GL.Rotate(rotation, 0.0F, 1.0F, 0.0F);
+            GLManager.GL.Translate(0.0F, -1.0625F, 0.0F);
+        }
+        else
+        {
+            int rotationIndex = sign.getPushedBlockData();
+            float angle = 0.0F;
+            if (rotationIndex == 2) angle = 180.0F;
+            if (rotationIndex == 4) angle = 90.0F;
+            if (rotationIndex == 5) angle = -90.0F;
+
+            GLManager.GL.Rotate(angle, 0.0F, 1.0F, 0.0F);
+            GLManager.GL.Translate(0.0F, -1.0625F, 0.0F);
+        }
+
+        BlockEntityRenderer.Instance.RenderTileEntityAt(sign, -0.5D, -0.75D, -0.5D, 0.0F);
+        GLManager.GL.PopMatrix();
+        GLManager.GL.Disable(GLEnum.DepthTest);
+        GLManager.GL.Disable(GLEnum.RescaleNormal);
     }
 }

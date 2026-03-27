@@ -1355,10 +1355,10 @@ public partial class BetaSharp
             }
             else if (player.isSleeping() && world != null && world.IsRemote)
             {
-                displayGuiScreen(new GuiSleepMP());
+                displayGuiScreen(new UIScreenAdapter(new SleepScreen(this)));
             }
         }
-        else if (currentScreen != null && currentScreen is GuiSleepMP && !player.isSleeping())
+        else if (currentScreen is UIScreenAdapter { Screen: SleepScreen } && !player.isSleeping())
         {
             displayGuiScreen((GuiScreen)null);
         }
