@@ -57,12 +57,12 @@ public class AchievementToast : UIElement
 
         if (_isInfo)
         {
-            renderer.DrawText(_description ?? "", 30, y + 7, Color.White);
+            renderer.DrawTextWrapped(_description ?? "", 30, y + 7, 126, Color.White);
         }
         else
         {
             renderer.DrawText(_title ?? "", 30, y + 7, Color.Yellow);
-            renderer.DrawText(_description ?? "", 30, y + 18, Color.White);
+            renderer.DrawTextWrapped(_description ?? "", 30, y + 18, 126, Color.White);
         }
 
         renderer.DrawItem(_achievement.icon, 8, y + 8);

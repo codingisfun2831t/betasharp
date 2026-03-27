@@ -52,12 +52,12 @@ public class AchievementCard : UIElement
         string? desc = _achievement.getTranslatedDescription();
         if (desc != null && canUnlock)
         {
-            renderer.DrawText(desc, 46, 22, Color.GrayA0);
+            renderer.DrawTextWrapped(desc, 46, 22, ComputedWidth - 120, Color.GrayA0);
         }
         else if (!canUnlock)
         {
             string reqName = _achievement.parent?.StatName ?? "Unknown";
-            renderer.DrawText($"Requires: {reqName}", 46, 22, Color.AchievementRequiresRed);
+            renderer.DrawTextWrapped($"Requires: {reqName}", 46, 22, ComputedWidth - 120, Color.AchievementRequiresRed);
         }
 
         // --- Status Markers ---

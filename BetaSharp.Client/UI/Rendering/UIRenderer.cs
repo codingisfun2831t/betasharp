@@ -172,6 +172,11 @@ public class UIRenderer(TextRenderer textRenderer, TextureManager textureManager
         GLManager.GL.PopMatrix();
     }
 
+    public void DrawTextWrapped(string text, float x, float y, float maxWidth, Color color)
+    {
+        textRenderer.DrawStringWrapped(text, (int)MathF.Floor(x + _translateX), (int)MathF.Floor(y + _translateY), (int)maxWidth, color);
+    }
+
     public void DrawCenteredText(string text, float x, float y, Color color, float rotation = 0, float scale = 1.0f, bool shadow = true)
     {
         if (rotation == 0 && scale == 1.0f)
