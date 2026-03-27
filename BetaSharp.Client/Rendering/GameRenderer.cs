@@ -814,7 +814,7 @@ public class GameRenderer
         GLManager.GL.Clear(ClearBufferMask.DepthBufferBit);
         GLManager.GL.MatrixMode(GLEnum.Projection);
         GLManager.GL.LoadIdentity();
-        GLManager.GL.Ortho(0.0D, var1.ScaledWidthDouble, var1.ScaledHeightDouble, 0.0D, 1000.0D, 3000.0D);
+        GLManager.GL.Ortho(0.0D, var1.ScaledWidth, var1.ScaledHeight, 0.0D, 1000.0D, 3000.0D);
         GLManager.GL.MatrixMode(GLEnum.Modelview);
         GLManager.GL.LoadIdentity();
         GLManager.GL.Translate(0.0F, 0.0F, -2000.0F);

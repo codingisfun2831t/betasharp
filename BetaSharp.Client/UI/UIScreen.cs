@@ -51,10 +51,10 @@ public abstract class UIScreen
     {
         ScaledResolution res = new(Game.options, Game.displayWidth, Game.displayHeight);
 
-        Root.Style.Width = (float)res.ScaledWidthDouble;
-        Root.Style.Height = (float)res.ScaledHeightDouble;
+        Root.Style.Width = res.ScaledWidth;
+        Root.Style.Height = res.ScaledHeight;
 
-        FlexLayout.ApplyLayout(Root, (float)res.ScaledWidthDouble, (float)res.ScaledHeightDouble);
+        FlexLayout.ApplyLayout(Root, res.ScaledWidth, res.ScaledHeight);
 
         float scaledMouseX = mouseX;
         float scaledMouseY = mouseY;
