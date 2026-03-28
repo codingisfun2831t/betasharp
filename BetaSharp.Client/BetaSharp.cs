@@ -1364,7 +1364,7 @@ public partial class BetaSharp
         if (currentScreen != null)
         {
             currentScreen.HandleInput();
-            currentScreen?.UpdateScreen();
+            currentScreen?.Update(1.0f);
         }
 
         if (currentScreen == null || currentScreen.AllowUserInput)

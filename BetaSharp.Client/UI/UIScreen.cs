@@ -62,8 +62,6 @@ public abstract class UIScreen
         Keyboard.enableRepeatEvents(false);
     }
 
-    public virtual void UpdateScreen() { }
-
     public void HandleInput()
     {
         while (Mouse.next()) { HandleMouseInput(); }
