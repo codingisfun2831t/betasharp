@@ -31,13 +31,13 @@ public class AchievementCard : UIElement
         renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, new Color(0, 0, 0, 100));
 
         // Hover / Unlocked Tint
-        if (IsHovered)
-        {
-            renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, Color.WhiteAlpha20);
-        }
-        else if (unlocked)
+        if (unlocked)
         {
             renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, new Color(50, 150, 50, 40));
+        }
+        else if (IsHovered)
+        {
+            renderer.DrawRect(0, 0, ComputedWidth, ComputedHeight, Color.WhiteAlpha20);
         }
 
         DrawAchievementIcon(renderer, unlocked, canUnlock);
