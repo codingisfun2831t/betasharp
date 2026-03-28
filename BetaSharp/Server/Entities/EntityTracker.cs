@@ -1,5 +1,6 @@
 ﻿using BetaSharp.Entities;
 using BetaSharp.Network.Packets;
+using BetaSharp.Util.Maths;
 
 namespace BetaSharp.Server.Entities;
 
@@ -38,7 +39,9 @@ public class EntityTracker
         }
         else if (entity is EntityArrow)
         {
-            startTracking(entity, 64, 20, false);
+            // There's no client side physics simulation so we need to updat often
+            // modern versions actually update every tick.
+            startTracking(entity, 64, 2, true);
         }
         else if (entity is EntityFireball)
         {
@@ -171,6 +174,21 @@ public class EntityTracker
         else
         {
             packet.Return();
+        }
+    }
+
+    public void updateListenerForChunk(ServerPlayerEntity player, int chunkX, int chunkZ)
+    {
+        foreach (EntityTrackerEntry tracker in entries)
+        {
+            Entity entity = tracker.currentTrackedEntity;
+            if (entity != player
+                && !entity.dead
+                && MathHelper.Floor(entity.x / 16.0) == chunkX
+                && MathHelper.Floor(entity.z / 16.0) == chunkZ)
+            {
+                tracker.updateListener(player);
+            }
         }
     }
 

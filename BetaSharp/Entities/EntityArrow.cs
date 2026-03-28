@@ -90,6 +90,13 @@ public class EntityArrow : Entity
 
     }
 
+    // Arrow inherits from base entity so it needs to set its position properly or it will default to the collide and move up on hit
+    public override void setPositionAndAnglesAvoidEntities(double x, double y, double z, float yaw, float pitch, int steps)
+    {
+        setPosition(x, y, z);
+        setRotation(yaw, pitch);
+    }
+
     public override void tick()
     {
         base.tick();
@@ -296,7 +303,7 @@ public class EntityArrow : Entity
     {
         if (!world.IsRemote)
         {
-            if (inGround && doesArrowBelongToPlayer && arrowShake <= 0 && player.inventory.addItemStackToInventory(new ItemStack(Item.ARROW, 1)))
+            if (inGround && doesArrowBelongToPlayer && arrowShake <= 0 && player.inventory.AddItemStackToInventory(new ItemStack(Item.ARROW, 1)))
             {
                 world.Broadcaster.PlaySoundAtEntity(this, "random.pop", 0.2F, ((random.NextFloat() - random.NextFloat()) * 0.7F + 1.0F) * 2.0F);
                 player.sendPickup(this, 1);

@@ -4,6 +4,8 @@ using BetaSharp.Blocks;
 using BetaSharp.Blocks.Entities;
 using BetaSharp.Client.Entities;
 using BetaSharp.Client.Entities.FX;
+using BetaSharp.Client.Guis;
+using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.Input;
 using BetaSharp.Client.Rendering.Entities;
 using BetaSharp.Client.UI.Screens.Menu.Net;
@@ -446,9 +448,9 @@ public class ClientNetworkHandler : NetHandler
 
         if (ent != null && collector != null)
         {
-            _worldClient.Broadcaster.PlaySoundAtEntity(ent, "random.pop", 0.2F, ((_rand.NextFloat() - _rand.NextFloat()) * 0.7F + 1.0F) * 2.0F);
+            worldClient.Broadcaster.PlaySoundAtEntity(ent, "random.pop", 0.2F, ((rand.NextFloat() - rand.NextFloat()) * 0.7F + 1.0F) * 2.0F);
             _game.particleManager.addEffect(new EntityPickupFX(_game.world, ent, collector, -0.5F));
-            _worldClient.RemoveEntityFromWorld(packet.entityId);
+            worldClient.RemoveEntityFromWorld(packet.entityId);
         }
 
     }
@@ -501,7 +503,6 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onHandshake(HandshakePacket packet)
     {
-        _logger.LogInformation($"[Client] Received onHandshake from server (user: {packet.username})");
         if (packet.username.Equals("-"))
         {
             addToSendQueue(new LoginHelloPacket(_game.session.username, 14, LoginHelloPacket.BETASHARP_CLIENT_SIGNATURE, 0));
@@ -513,7 +514,7 @@ public class ClientNetworkHandler : NetHandler
                 //TODO: AUTH
                 string authUrl = "http://www.minecraft.net/game/joinserver.jsp?user=" + _game.session.username + "&sessionId=" + _game.session.sessionId + "&serverId=" + packet.username;
 
-                string? response = s_httpClient.GetStringAsync(authUrl).GetAwaiter().GetResult();
+                string? response = _httpClient.GetStringAsync(authUrl).GetAwaiter().GetResult();
                 response = response?.Trim();
 
                 if (string.IsNullOrEmpty(response) || response.Equals("ok", StringComparison.OrdinalIgnoreCase))
@@ -522,13 +523,13 @@ public class ClientNetworkHandler : NetHandler
                 }
                 else
                 {
-                    _netManager.disconnect("disconnect.loginFailedInfo", response);
+                    netManager.disconnect("disconnect.loginFailedInfo", response);
                 }
             }
             catch (Exception e)
             {
                 _logger.LogError(e, e.Message);
-                _netManager.disconnect("disconnect.genericReason", "Internal client error: " + e.Message);
+                netManager.disconnect("disconnect.genericReason", "Internal client error: " + e.Message);
             }
         }
     }
@@ -639,6 +640,8 @@ public class ClientNetworkHandler : NetHandler
 
     public override void onOpenScreen(OpenScreenS2CPacket packet)
     {
+        if (!_game.player.GameMode.CanInteract) return;
+
         if (packet.screenHandlerId == 0)
         {
             InventoryBasic inventory = new(packet.name, packet.slotsCount);
@@ -845,6 +848,11 @@ public class ClientNetworkHandler : NetHandler
             Entity? ent = _worldClient.GetEntity(packet.entityId);
             EntityRenderDispatcher.instance.skinManager?.Release(packet.name);
         }
+    }
+
+    public override void onPlayerGameModeUpdate(PlayerGameModeUpdateS2CPacket packet)
+    {
+        _game.player.GameMode = packet.GameMode;
     }
 
     public override bool isServerSide()
