@@ -1,4 +1,6 @@
-﻿namespace BetaSharp.Client.Guis;
+using System.Reflection;
+
+namespace BetaSharp.Client.Guis;
 
 public readonly partial struct Color
 {
@@ -51,7 +53,7 @@ public readonly partial struct Color
     /// <exception cref="ArgumentException">Invalid color</exception>
     private static void SetColorWithStr(string name, string colorStr)
     {
-        var prop = typeof(Color).GetProperty(name);
+        PropertyInfo? prop = typeof(Color).GetProperty(name);
         if (prop == null)
         {
             Console.WriteLine($"Color by name \"{name}\" not found");

@@ -1,21 +1,15 @@
 using BetaSharp.NBT;
 
-namespace BetaSharp.Client.Guis;
+namespace BetaSharp.Client.Network;
 
-public class ServerData
+public class ServerData(string name, string ip)
 {
-    public string Name { get; set; } = "";
-    public string Ip { get; set; } = "";
+    public string Name { get; set; } = name;
+    public string Ip { get; set; } = ip;
     public string? PopulationInfo { get; set; }
     public string? Motd { get; set; }
     public long Lag { get; set; }
     public bool Polled { get; set; } = false;
-
-    public ServerData(string name, string ip)
-    {
-        Name = name;
-        Ip = ip;
-    }
 
     public NBTTagCompound ToNBT()
     {

@@ -1,13 +1,13 @@
 using System.Reflection;
 using BetaSharp.Blocks;
+using BetaSharp.Client.Guis;
 using BetaSharp.Client.Rendering.Core;
 using BetaSharp.Client.Rendering.Core.Textures;
-using BetaSharp.Client.UI;
 using BetaSharp.Entities;
 using BetaSharp.Items;
 using BetaSharp.Util.Hit;
 
-namespace BetaSharp.Client.Guis;
+namespace BetaSharp.Client.UI;
 
 public enum ControlIcon
 {

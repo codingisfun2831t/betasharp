@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using BetaSharp.Client.Rendering.Core;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BetaSharp.Client.Guis;
 
@@ -120,4 +119,14 @@ public readonly partial struct Color
     public override string ToString() => _value.ToString("x8");
     public override bool Equals([NotNullWhen(true)] object? obj) => _value.Equals(obj);
     public override int GetHashCode() => _value;
+
+    public static bool operator ==(Color left, Color right)
+    {
+        return left.Equals(right);
+    }
+
+    public static bool operator !=(Color left, Color right)
+    {
+        return !(left == right);
+    }
 }
