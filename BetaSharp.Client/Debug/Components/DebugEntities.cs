@@ -1,6 +1,7 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
 using BetaSharp.Client.Rendering;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
 
@@ -10,11 +11,11 @@ public class DebugEntities : DebugComponent
 {
     public DebugEntities() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
         WorldRenderer render = ctx.Game.terrainRenderer;
-        ctx.String("Rendered Entities: " + render.countEntitiesRendered + "/" + render.countEntitiesTotal);
-        ctx.String("Hidden Entities: " + render.countEntitiesHidden + ", Not in view: " + (render.countEntitiesTotal - render.countEntitiesHidden - render.countEntitiesRendered));
+        column.AddChild(new DebugRow("Rendered Entities: " + render.countEntitiesRendered + "/" + render.countEntitiesTotal));
+        column.AddChild(new DebugRow("Hidden Entities: " + render.countEntitiesHidden + ", Not in view: " + (render.countEntitiesTotal - render.countEntitiesHidden - render.countEntitiesRendered)));
     }
 
     public override DebugComponent Duplicate()

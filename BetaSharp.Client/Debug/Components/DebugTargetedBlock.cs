@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using BetaSharp.Blocks;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 using BetaSharp.Util.Hit;
 
 namespace BetaSharp.Client.Debug.Components;
@@ -13,7 +14,7 @@ public class DebugTargetedBlock : DebugComponent
 
     private static readonly string[] s_blockSides = ["Down", "Up", "North", "South", "West", "East"];
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
         BetaSharp g = ctx.Game;
 
@@ -45,10 +46,10 @@ public class DebugTargetedBlock : DebugComponent
             }
         }
 
-        ctx.String("Targeted block:");
-        ctx.String($"{blockName} ({blockId}:{blockMeta})");
-        ctx.String($"XYZ: {blockX} / {blockY} / {blockZ}");
-        ctx.String($"Face: {sideName}");
+        column.AddChild(new DebugRow("Targeted block:"));
+        column.AddChild(new DebugRow($"{blockName} ({blockId}:{blockMeta})"));
+        column.AddChild(new DebugRow($"XYZ: {blockX} / {blockY} / {blockZ}"));
+        column.AddChild(new DebugRow($"Face: {sideName}"));
     }
 
     public override DebugComponent Duplicate()

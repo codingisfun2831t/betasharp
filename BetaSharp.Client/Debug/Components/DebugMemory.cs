@@ -1,24 +1,23 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
-
 
 [DisplayName("Memory")]
 [Description("Shows memory/GC info.")]
 public class DebugMemory : DebugComponent
 {
-
     public DebugMemory() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
         long maxMem = ctx.GCMonitor.MaxMemoryBytes;
         long usedMem = ctx.GCMonitor.UsedMemoryBytes;
         long heapMem = ctx.GCMonitor.UsedHeapBytes;
 
-        ctx.String($"Mem: {FormatPercentage(usedMem, maxMem)} {FormatMegabytes(usedMem)}/{FormatMegabytes(maxMem)}MB");
-        ctx.String($"Allocated: {FormatPercentage(heapMem, maxMem)} {FormatMegabytes(heapMem)}MB");
+        column.AddChild(new DebugRow($"Mem: {FormatPercentage(usedMem, maxMem)} {FormatMegabytes(usedMem)}/{FormatMegabytes(maxMem)}MB"));
+        column.AddChild(new DebugRow($"Allocated: {FormatPercentage(heapMem, maxMem)} {FormatMegabytes(heapMem)}MB"));
     }
 
     public override DebugComponent Duplicate()
@@ -28,6 +27,7 @@ public class DebugMemory : DebugComponent
             Right = Right
         };
     }
+
     private static string FormatMegabytes(long bytes)
     {
         return bytes <= 0L ? "N/A" : $"{bytes / 1024L / 1024L}";
@@ -37,5 +37,4 @@ public class DebugMemory : DebugComponent
     {
         return total > 0L ? $"{value * 100L / total}%" : "N/A";
     }
-
 }

@@ -1,5 +1,6 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
 
@@ -9,11 +10,11 @@ public class DebugServer : DebugComponent
 {
     public DebugServer() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
         if (ctx.Game.internalServer != null)
         {
-            ctx.String($"Integrated server @ {ctx.Game.internalServer.Tps:F1}/20 TPS");
+            column.AddChild(new DebugRow($"Integrated server @ {ctx.Game.internalServer.Tps:F1}/20 TPS"));
         }
     }
 

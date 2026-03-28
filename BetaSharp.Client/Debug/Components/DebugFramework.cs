@@ -1,9 +1,9 @@
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
-
 
 [DisplayName("Framework")]
 [Description("Shows .NET version.")]
@@ -11,9 +11,9 @@ public class DebugFramework : DebugComponent
 {
     public DebugFramework() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
-        ctx.String(RuntimeInformation.FrameworkDescription);
+        column.AddChild(new DebugRow(RuntimeInformation.FrameworkDescription));
     }
 
     public override DebugComponent Duplicate()

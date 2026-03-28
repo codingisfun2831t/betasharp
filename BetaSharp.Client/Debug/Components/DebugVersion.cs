@@ -1,5 +1,6 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
 
@@ -7,12 +8,11 @@ namespace BetaSharp.Client.Debug.Components;
 [Description("Shows the current BetaSharp version.")]
 public class DebugVersion : DebugComponent
 {
-
     public DebugVersion() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
-        ctx.String("BetaSharp " + BetaSharp.Version);
+        column.AddChild(new DebugRow("BetaSharp " + BetaSharp.Version));
     }
 
     public override DebugComponent Duplicate()

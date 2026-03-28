@@ -1,5 +1,6 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
 
@@ -9,9 +10,9 @@ public class DebugFPS : DebugComponent
 {
     public DebugFPS() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
-        ctx.String(ctx.Game.debug);
+        column.AddChild(new DebugRow(ctx.Game.debug));
     }
 
     public override DebugComponent Duplicate()

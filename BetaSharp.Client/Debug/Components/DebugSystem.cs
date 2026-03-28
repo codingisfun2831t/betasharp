@@ -1,6 +1,7 @@
 using System.ComponentModel;
-using BetaSharp.Client.Debug;
 using BetaSharp.Client.Diagnostics;
+using BetaSharp.Client.UI;
+using BetaSharp.Client.UI.Controls;
 
 namespace BetaSharp.Client.Debug.Components;
 
@@ -10,16 +11,16 @@ public class DebugSystem : DebugComponent
 {
     public DebugSystem() { }
 
-    public override void Draw(DebugContext ctx)
+    public override void AddRows(UIElement column, DebugContext ctx)
     {
         DebugSystemSnapshot systemSnapshot = ctx.Game.GetDebugSystemSnapshot();
-        ctx.String($"CPU: {FormatCpuInfo(systemSnapshot)}");
-        ctx.String($"GPU: {systemSnapshot.GpuName} (VRAM: {systemSnapshot.GpuVram})");
-        ctx.String($"OpenGL: {systemSnapshot.OpenGlVersion}");
-        ctx.String($"GLSL: {systemSnapshot.GlslVersion}");
-        ctx.String($"Driver: {systemSnapshot.DriverVersion}");
-        ctx.String($"OS: {systemSnapshot.OsDescription}");
-        ctx.String($".NET: {systemSnapshot.DotNetRuntime}");
+        column.AddChild(new DebugRow($"CPU: {FormatCpuInfo(systemSnapshot)}"));
+        column.AddChild(new DebugRow($"GPU: {systemSnapshot.GpuName} (VRAM: {systemSnapshot.GpuVram})"));
+        column.AddChild(new DebugRow($"OpenGL: {systemSnapshot.OpenGlVersion}"));
+        column.AddChild(new DebugRow($"GLSL: {systemSnapshot.GlslVersion}"));
+        column.AddChild(new DebugRow($"Driver: {systemSnapshot.DriverVersion}"));
+        column.AddChild(new DebugRow($"OS: {systemSnapshot.OsDescription}"));
+        column.AddChild(new DebugRow($".NET: {systemSnapshot.DotNetRuntime}"));
     }
 
     private static string FormatCpuInfo(DebugSystemSnapshot systemSnapshot)
