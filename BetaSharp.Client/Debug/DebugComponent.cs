@@ -10,20 +10,20 @@ public abstract class DebugComponent
     public abstract IEnumerable<DebugRowData> GetRows(DebugContext ctx);
     public abstract DebugComponent Duplicate();
 
-    public void write(NBTTagCompound nbt)
+    public void Write(NBTTagCompound nbt)
     {
         nbt.SetBoolean("Right", Right);
 
-        writeNBT(nbt);
+        WriteNBT(nbt);
     }
 
-    public void read(NBTTagCompound nbt)
+    public void Read(NBTTagCompound nbt)
     {
         Right = nbt.GetBoolean("Right");
 
-        readNBT(nbt);
+        ReadNBT(nbt);
     }
 
-    public virtual void writeNBT(NBTTagCompound nbt) { }
-    public virtual void readNBT(NBTTagCompound nbt) { }
+    public virtual void WriteNBT(NBTTagCompound nbt) { }
+    public virtual void ReadNBT(NBTTagCompound nbt) { }
 }

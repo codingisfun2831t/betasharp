@@ -48,13 +48,13 @@ public class DebugMemory : DebugComponent
         return total > 0L ? $"{value * 100L / total}%" : "N/A";
     }
 
-    public override void writeNBT(NBTTagCompound nbt)
+    public override void WriteNBT(NBTTagCompound nbt)
     {
         nbt.SetBoolean("ShowMem", ShowMem);
         nbt.SetBoolean("ShowAllocated", ShowAllocated);
     }
 
-    public override void readNBT(NBTTagCompound nbt)
+    public override void ReadNBT(NBTTagCompound nbt)
     {
         ShowMem = nbt.GetBoolean("ShowMem");
         ShowAllocated = nbt.GetBoolean("ShowAllocated");

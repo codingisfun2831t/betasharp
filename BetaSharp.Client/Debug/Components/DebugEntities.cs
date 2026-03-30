@@ -50,14 +50,14 @@ public class DebugEntities : DebugComponent
         };
     }
 
-    public override void writeNBT(NBTTagCompound nbt)
+    public override void WriteNBT(NBTTagCompound nbt)
     {
         nbt.SetBoolean("ShowRendered", ShowRendered);
         nbt.SetBoolean("ShowHidden", ShowHidden);
         nbt.SetBoolean("ShowNotInView", ShowNotInView);
     }
 
-    public override void readNBT(NBTTagCompound nbt)
+    public override void ReadNBT(NBTTagCompound nbt)
     {
         ShowRendered  = nbt.GetBoolean("ShowRendered");
         ShowHidden = nbt.GetBoolean("ShowHidden");

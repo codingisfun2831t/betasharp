@@ -72,7 +72,7 @@ public class DebugSystem : DebugComponent
         };
     }
 
-    public override void writeNBT(NBTTagCompound nbt)
+    public override void WriteNBT(NBTTagCompound nbt)
     {
         nbt.SetBoolean("ShowCPU", ShowCPU);
         nbt.SetBoolean("ShowGPU", ShowGPU);
@@ -82,7 +82,7 @@ public class DebugSystem : DebugComponent
         nbt.SetBoolean("ShowOS", ShowOS);
     }
 
-    public override void readNBT(NBTTagCompound nbt)
+    public override void ReadNBT(NBTTagCompound nbt)
     {
         ShowCPU = nbt.GetBoolean("ShowCPU");
         ShowGPU = nbt.GetBoolean("ShowGPU");

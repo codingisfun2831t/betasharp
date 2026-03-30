@@ -129,7 +129,7 @@ public class DebugLocation : DebugComponent
         };
     }
 
-    public override void writeNBT(NBTTagCompound nbt)
+    public override void WriteNBT(NBTTagCompound nbt)
     {
         nbt.SetBoolean("ShowXYZ", ShowXYZ);
         nbt.SetBoolean("ShowBlockXYZ", ShowBlockXYZ);
@@ -138,7 +138,7 @@ public class DebugLocation : DebugComponent
         nbt.SetBoolean("ShowLight", ShowLight);
     }
 
-    public override void readNBT(NBTTagCompound nbt)
+    public override void ReadNBT(NBTTagCompound nbt)
     {
         ShowXYZ = nbt.GetBoolean("ShowXYZ");
         ShowBlockXYZ = nbt.GetBoolean("ShowBlockXYZ");

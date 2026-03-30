@@ -80,7 +80,7 @@ public class DebugComponentsStorage
                         _logger.LogWarning("Component " + i + " is a " + type + ", which couldnt be created!");
                     }
 
-                    comp.read(ntc);
+                    comp.Read(ntc);
                     Overlay.Components.Add(comp);
                 }
             }
@@ -106,7 +106,7 @@ public class DebugComponentsStorage
             {
                 NBTTagCompound nbt = new NBTTagCompound();
                 nbt.SetString("_type", comp.GetType().Name);
-                comp.write(nbt);
+                comp.Write(nbt);
                 list.SetTag(nbt);
             }
             NbtIo.Write(tag, writer.BaseStream);
