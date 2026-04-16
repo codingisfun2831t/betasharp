@@ -153,6 +153,8 @@ public class GameOptions
     public event Action ReloadTextures;
     public event Action ReloadChunks;
 
+    public ParityOptions Parity { get; init; } = new();
+
     public GameOptions(BetaSharp game, string gameDataDir)
     {
         _game = game;
@@ -355,6 +357,11 @@ public class GameOptions
         yield return MsaaOption;
         yield return ShowWTHITOption;
         yield return ShowCoordinatesOption;
+
+        foreach (GameOption parity in Parity.Options.Values)
+        {
+            yield return parity;
+        }
     }
 
 
