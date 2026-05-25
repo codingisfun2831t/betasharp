@@ -25,9 +25,7 @@ public class LanguageSelectionScreen(UIContext context, UIScreen? parent) : Base
         Root.Style.AlignItems = Align.Center;
         Root.Style.SetPadding(20);
 
-        TranslationStorage translations = TranslationStorage.Instance;
-
-        Label title = new() { Text = translations.TranslateKey("menu.language"), TextColor = Color.White };
+        Label title = new() { Text = Translations.Get("menu.language"), TextColor = Color.White };
         title.Style.MarginBottom = 8;
         Root.AddChild(title);
         AddTitleSpacer();
@@ -59,7 +57,7 @@ public class LanguageSelectionScreen(UIContext context, UIScreen? parent) : Base
         row2.Style.JustifyContent = Justify.Center;
 
         Button btnCancel = CreateButton();
-        btnCancel.Text = translations.TranslateKey("gui.done");
+        btnCancel.Text = Translations.Get("gui.done");
         btnCancel.Style.Width = 150;
         btnCancel.Style.SetMargin(2);
         btnCancel.OnClick += (e) => Context.Navigator.Navigate(null);
@@ -79,13 +77,13 @@ public class LanguageSelectionScreen(UIContext context, UIScreen? parent) : Base
         _scrollView.ContentContainer.Children.Clear();
         _listItems.Clear();
 
-        foreach (var lang in AssetManager.Languages)
+        foreach (var lang in Translations.Instance.Languages.Values)
         {
-            LanguageListItem item = new(lang.Value);
-            item.OnClick += (e) => SelectListItem(item, lang.Key);
+            LanguageListItem item = new(lang);
+            item.OnClick += (e) => SelectListItem(item, lang);
             _scrollView.AddContent(item);
             _listItems.Add(item);
-            if (lang.Key.Remove(5) == Options.Language)
+            if (lang.Code == Options.Language)
             {
                 item.IsSelected = true;
                 _selectedLanguage = item;
@@ -93,9 +91,9 @@ public class LanguageSelectionScreen(UIContext context, UIScreen? parent) : Base
         }
     }
 
-    private void SelectListItem(LanguageListItem item, string key)
+    private void SelectListItem(LanguageListItem item, Language lang)
     {
-        Options.Language = key.Split('.')[0];
+        Options.Language = lang.Code;
         Options.SaveOptions();
 
         if(_selectedLanguage != null)

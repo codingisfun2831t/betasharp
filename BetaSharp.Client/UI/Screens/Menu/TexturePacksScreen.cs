@@ -31,7 +31,7 @@ public class TexturePacksScreen(
 
         Label title = new()
         {
-            Text = TranslationStorage.Instance.TranslateKey("texturePack.title"),
+            Text = Translations.GetFormatted("texturePack.title"),
             TextColor = Color.White,
             Centered = true
         };
@@ -51,7 +51,7 @@ public class TexturePacksScreen(
 
         Label info = new()
         {
-            Text = TranslationStorage.Instance.TranslateKey("texturePack.folderInfo"),
+            Text = Translations.GetFormatted("texturePack.folderInfo"),
             TextColor = Color.GrayA0,
             Centered = true
         };
@@ -64,14 +64,14 @@ public class TexturePacksScreen(
         buttonContainer.Style.Width = 320;
 
         Button btnOpen = CreateButton();
-        btnOpen.Text = TranslationStorage.Instance.TranslateKey("texturePack.openFolder");
+        btnOpen.Text = Translations.GetFormatted("texturePack.openFolder");
         btnOpen.Style.Width = 150;
         btnOpen.Style.SetMargin(2);
         btnOpen.OnClick += (e) => OpenFolder();
         buttonContainer.AddChild(btnOpen);
 
         Button btnDone = CreateButton();
-        btnDone.Text = TranslationStorage.Instance.TranslateKey("gui.done");
+        btnDone.Text = Translations.GetFormatted("gui.done");
         btnDone.Style.Width = 150;
         btnDone.Style.SetMargin(2);
         btnDone.OnClick += (e) => OnDone();

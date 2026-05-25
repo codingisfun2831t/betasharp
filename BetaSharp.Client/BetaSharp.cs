@@ -1568,10 +1568,8 @@ public partial class BetaSharp :
     {
         if (CurrentScreen == null)
         {
-            TranslationStorage translationStorage = TranslationStorage.Instance;
-
             bool isMP = IsMultiplayerWorld() && InternalServer == null;
-            string quitText = isMP ? translationStorage.TranslateKey("menu.disconnect") : translationStorage.TranslateKey("menu.saveAndQuitToTitle");
+            string quitText = isMP ? Translations.Get("menu.disconnect") : Translations.Get("menu.saveAndQuitToTitle");
             int saveStep = 0;
             Navigate(new IngameMenuScreen(UIContext, StatFileWriter, SetIngameFocus, quitText, () =>
             {

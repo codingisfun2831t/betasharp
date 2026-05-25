@@ -63,7 +63,6 @@ public class AssetManager
     private static readonly object s_instanceLock = new();
     private static AssetManager? s_instance;
     private static AssetProfile? s_configuredProfile;
-    public static Dictionary<string, string> Languages = new Dictionary<string, string>();
 
     public static AssetManager Instance => s_instance ?? throw new InvalidOperationException("AssetManager was not initialized.");
 
@@ -126,28 +125,7 @@ public class AssetManager
 
                 foreach (var file in langFiles)
                 {
-                    string? name = null;
-
-                    try
-                    {
-                        string json = File.ReadAllText(file);
-                        using JsonDocument doc = JsonDocument.Parse(json);
-
-                        if (doc.RootElement.TryGetProperty("lang", out var langObj) &&
-                            langObj.TryGetProperty("name", out var nameProp))
-                        {
-                            name = nameProp.GetString();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine($"Invalid JSON in {file}: {ex.Message}");
-                    }
-
-                    string fileName = Path.GetFileName(file);
-
-                    Languages.Add(fileName, name ?? "Unknown");
-                    defineAsset("lang/" + fileName, AssetType.Text);
+                    defineAsset("lang/" + Path.GetFileName(file), AssetType.Text);
                 }
             }
             else
@@ -265,6 +243,9 @@ public class AssetManager
         defineAsset("misc/vignette.png", AssetType.Binary);
         defineAsset("misc/water.png", AssetType.Binary);
         defineAsset("misc/watercolor.png", AssetType.Binary);
+
+
+        defineAsset("lang/lang.json", AssetType.Text);
 
         defineAsset("mob/char.png", AssetType.Binary);
         defineAsset("mob/chicken.png", AssetType.Binary);
