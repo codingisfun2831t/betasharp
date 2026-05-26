@@ -5,6 +5,7 @@ using BetaSharp.Client.Options;
 using BetaSharp.Client.UI.Controls;
 using BetaSharp.Client.UI.Controls.Core;
 using BetaSharp.Client.UI.Layout.Flexbox;
+using SixLabors.ImageSharp.Drawing.Processing;
 
 namespace BetaSharp.Client.UI.Screens.Menu.Options;
 
@@ -19,7 +20,7 @@ public class CreditsScreen(UIContext context, UIScreen parent) : UIScreen(contex
 
         Label title = new()
         {
-            Text = "Credits",
+            Text = Translations.Get("menu.credits"),
             TextColor = Color.White,
             Centered = true
         };
@@ -38,11 +39,27 @@ public class CreditsScreen(UIContext context, UIScreen parent) : UIScreen(contex
 
         Root.AddChild(scroll);
 
+        Panel buttons = new();
+        buttons.Style.FlexDirection = FlexDirection.Row;
+
         Button btnDone = CreateButton();
         btnDone.Text = Translations.GetFormatted("gui.done");
         btnDone.Style.MarginBottom = 20;
+        btnDone.Style.MarginRight = 4;
         btnDone.OnClick += (e) => Context.Navigator.Navigate(parent);
-        Root.AddChild(btnDone);
+        buttons.AddChild(btnDone);
+
+        ImageButton btnLang = CreateImageButton();
+        btnLang.OnClick += (e) => Context.Navigator.Navigate(new TranslationsCreditScreen(Context, this));
+        btnLang.Texture = Renderer.TextureManager.GetTextureId("/gui/Globe.png");
+        btnLang.U = 0;
+        btnLang.V = 0;
+        btnLang.UWidth = 24;
+        btnLang.VHeight = 24;
+        btnLang.Style.MarginBottom = 20;
+        buttons.AddChild(btnLang);
+
+        Root.AddChild(buttons);
     }
 
     private void Content(ScrollView scroll)
@@ -99,17 +116,17 @@ public class CreditsScreen(UIContext context, UIScreen parent) : UIScreen(contex
         image.Style.MarginBottom = 10;
         scroll.AddContent(image);
 
-        Header("BetaSharp Version " + BetaSharp.Version);
-        Text("An enhanced of Minecraft Beta 1.7.3, written in C#.");
-        Link("On GitHub", "https://github.com/betasharp-official/betasharp/");
-        Link("Made by Fazin85", "https://github.com/Fazin85");
+        Header(Translations.GetFormatted("credits.version", BetaSharp.Version));
+        Text(Translations.Get("credits.description"));
+        Link(Translations.Get("credits.github"), "https://github.com/betasharp-official/betasharp/");
+        Link(Translations.Get("credits.madeBy"), "https://github.com/Fazin85");
         Seperator();
 
-        Header("Libraries");
-        Link("Slik.NET - Graphics", "https://github.com/dotnet/Silk.NET");
-        Link("ImGui - Debug UI", "https://github.com/ocornut/imgui");
-        Link("SFML.NET - Audio", "https://github.com/SFML/SFML.Net");
-        Link("SixLabors - Fonts, image processing", "https://github.com/sixlabors");
+        Header(Translations.Get("credits.libraries"));
+        Link(Translations.Get("credits.sliknet"), "https://github.com/dotnet/Silk.NET");
+        Link(Translations.Get("credits.imgui"), "https://github.com/ocornut/imgui");
+        Link(Translations.Get("credits.sfml"), "https://github.com/SFML/SFML.Net");
+        Link(Translations.Get("credits.sixlabors"), "https://github.com/sixlabors");
     }
 
     

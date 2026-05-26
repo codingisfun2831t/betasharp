@@ -1342,5 +1342,20 @@
             "title": "When Pigs Fly",
             "desc": "Fly a pig off a cliff"
         }
+    },
+    "credits": {
+        "translations": "Translations",
+
+        "version": "Betasharp Version {0}",
+        "description": "An enhanced of Minecraft Beta 1.7.3, written in C#.",
+        "github": "On GitHub",
+        "license": "Licensed under the MIT License",
+        "madeBy": "Made by Fazin85",
+
+        "libraries": "Libraries",
+        "silk": "Slik.NET - Graphics",
+        "imgui": "ImGui - Debug UI",
+        "sfml": "SFML.NET - Audio",
+        "sixlabors": "SixLabors - Fonts, image processing"
     }
 }
