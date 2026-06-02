@@ -66,6 +66,8 @@ public class AssetManager
 
     public static AssetManager Instance => s_instance ?? throw new InvalidOperationException("AssetManager was not initialized.");
 
+    public static bool Initialized => s_instance is not null;
+
     public static void Initialize(AssetProfile profile)
     {
         lock (s_instanceLock)

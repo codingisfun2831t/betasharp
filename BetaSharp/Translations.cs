@@ -17,11 +17,21 @@ public class Translations
 
     private Translations()
     {
-        var asset = AssetManager.Instance.getAsset($"{Language.LangFolder}/lang.json");
-        if (asset == null)
-            return;
+        // do no languages if the asset manager isnt initialized or it failed to loda
+        string content;
+        if (AssetManager.Initialized)
+        {
+            var asset = AssetManager.Instance.getAsset($"{Language.LangFolder}/lang.json");
+            if (asset == null)
+                content = "{}";
 
-        using JsonDocument doc = JsonDocument.Parse(asset.GetTextContent());
+            content = asset.GetTextContent();
+        } else
+        {
+            content = "{}";
+        }
+
+        using JsonDocument doc = JsonDocument.Parse(content);
 
         foreach (JsonProperty prop in doc.RootElement.EnumerateObject())
         {
@@ -54,7 +64,7 @@ public class Translations
         }
     }
 
-    public static string Get(string key) => Instance.CurrentLanguage[key];
+    public static string Get(string key) => Instance.CurrentLanguage is not null ? Instance.CurrentLanguage[key] : key;
 
     public static string GetFormatted(string key, params object[] values)
     {
