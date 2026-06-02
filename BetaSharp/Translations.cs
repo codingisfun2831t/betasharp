@@ -13,6 +13,8 @@ public class Translations
 
     public Dictionary<string, Language> Languages { get; private set; } = new Dictionary<string, Language>();
 
+    public static event Action LanguageChanged;
+
     private Translations()
     {
         var asset = AssetManager.Instance.getAsset($"{Language.LangFolder}/lang.json");
@@ -47,6 +49,8 @@ public class Translations
         if (Instance.Languages.ContainsKey(code))
         {
             Instance.CurrentLanguage = Instance.Languages[code];
+
+            LanguageChanged?.Invoke();
         }
     }
 
